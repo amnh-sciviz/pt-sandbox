@@ -12,12 +12,14 @@
   position: absolute;
   width: 3vmin;
   height: 3vmin;
+  text-align: center;
+  line-height: 3vmin;
   top: -1.5vmin;
   left: -1.5vmin;
   background: #205c6a;
-  color: #000;
   border-radius: 50%;
   text-align: center;
+  color: #fff;
 }
 .touch > div {
   position: absolute;
@@ -25,4 +27,7 @@
   height: 3vmin;
   left: 3vmin;
   top: 3vmin;
+  text-align: left;
+  line-height: 1.5;
+  color: #000;
 }

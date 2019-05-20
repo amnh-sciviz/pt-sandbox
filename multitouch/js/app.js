@@ -60,7 +60,7 @@ var MultiTouchApp = (function() {
     var x = event.clientX;
     var y = event.clientY;
     $touch.css("transform", "translate3d("+x+"px, "+y+"px, 0)");
-    $touch.html("<div>"+x.toFixed(2) + " " + y.toFixed(2)+"</div>");
+    $touch.html((index+1)+"<div>"+x.toFixed(2) + " " + y.toFixed(2)+"</div>");
     $touch.addClass("active");
   };
 
