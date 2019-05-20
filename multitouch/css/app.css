@@ -1,3 +1,7 @@
+body {
+  touch-action: none;
+}
+
 .instructions {
   position: relative;
   top: 50%;
@@ -20,6 +24,7 @@
   border-radius: 50%;
   text-align: center;
   color: #fff;
+  touch-action: none;
 }
 .touch > div {
   position: absolute;
