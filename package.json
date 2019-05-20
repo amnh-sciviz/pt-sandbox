@@ -1,0 +1,10 @@
+{
+  "name": "pt-sandbox",
+  "description": "Periodic Table Sandbox",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "express": "^4.17.0"
+  }
+}

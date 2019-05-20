@@ -1,0 +1,24 @@
+/* define global colors */
+:root {
+  --secondary-color: #7a1313;
+}
+
+body {
+  font-size: 16px;
+  font-family: helvetica, sans-serif;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 38rem;
+  padding: 2rem;
+  margin: auto;
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.2;
+}
+
+a {
+  color: var(--secondary-color);
+}
