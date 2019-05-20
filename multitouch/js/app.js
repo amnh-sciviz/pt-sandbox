@@ -24,6 +24,8 @@ var MultiTouchApp = (function() {
     var _this = this;
 
     $canvas.on('touchstart touchmove touchend', function(e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
       $instructions.css("display", "none");
        _this.renderTouches(e.touches);
     });
