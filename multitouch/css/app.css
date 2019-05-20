@@ -1,0 +1,28 @@
+.instructions {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  padding: 2rem;
+  color: #444;
+  font-size: 1.6rem;
+}
+
+.touch {
+  position: absolute;
+  width: 3vmin;
+  height: 3vmin;
+  top: -1.5vmin;
+  left: -1.5vmin;
+  background: #205c6a;
+  color: #000;
+  border-radius: 50%;
+  text-align: center;
+}
+.touch > div {
+  position: absolute;
+  width: 3vmin;
+  height: 3vmin;
+  left: 3vmin;
+  top: 3vmin;
+}

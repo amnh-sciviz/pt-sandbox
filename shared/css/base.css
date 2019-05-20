@@ -9,16 +9,25 @@ body {
   line-height: 1.5;
 }
 
-.container {
-  max-width: 38rem;
-  padding: 2rem;
-  margin: auto;
-}
-
 h1, h2, h3, h4 {
   line-height: 1.2;
 }
 
 a {
   color: var(--secondary-color);
+}
+
+.container {
+  max-width: 38rem;
+  padding: 2rem;
+  margin: auto;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ddd;
 }
