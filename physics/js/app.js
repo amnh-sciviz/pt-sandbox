@@ -8,6 +8,7 @@ var PhysicsApp = (function() {
     var defaults = {
       el: '#canvas',
       objects: 20,
+      inputsAllowed: 5,
       restitution: 0.2, // a.k.a. bounciness; 0 = no bounce
       density: 0.5, // default is 0.001
       friction: 0.9, // default is 0.1
@@ -47,8 +48,8 @@ var PhysicsApp = (function() {
     });
   };
 
-  PhysicsApp.prototype.onGameCreate = function(ctx){
-    ctx.matter.world.setBounds(0, 0, w, h);
+  PhysicsApp.prototype.onGameCreate = function(scene){
+    scene.matter.world.setBounds(0, 0, w, h);
 
     // add random objects
     var sideLenMax = Math.max(Math.round(Math.min(w, h) * 0.08), 20);
@@ -62,13 +63,16 @@ var PhysicsApp = (function() {
 
       if (Math.random() < 0.7) {
           var sides = Phaser.Math.Between(3, 14);
-          ctx.matter.add.polygon(x, y, sides, radius, { restitution: opt.restitution, density: opt.density, friction: opt.friction, frictionAir: opt.frictionAir });
+          scene.matter.add.polygon(x, y, sides, radius, { restitution: opt.restitution, density: opt.density, friction: opt.friction, frictionAir: opt.frictionAir });
       } else {
-          ctx.matter.add.rectangle(x, y, objW, objH, { restitution: opt.restitution, density: opt.density, friction: opt.friction, frictionAir: opt.frictionAir });
+          scene.matter.add.rectangle(x, y, objW, objH, { restitution: opt.restitution, density: opt.density, friction: opt.friction, frictionAir: opt.frictionAir });
       }
     }
 
-    ctx.matter.add.mouseSpring();
+    scene.matter.add.mouseSpring();
+
+    // We need to add extra pointers, as we only get 1 by default
+    scene.input.addPointer(opt.inputsAllowed-1);
   };
 
   PhysicsApp.prototype.onGameUpdate = function(){
