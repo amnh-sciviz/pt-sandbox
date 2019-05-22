@@ -31,4 +31,5 @@ a {
   height: 100%;
   background: #ddd;
   touch-action: none;
+  overflow: hidden;
 }
