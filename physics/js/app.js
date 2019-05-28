@@ -2,7 +2,7 @@
 
 var PhysicsApp = (function() {
 
-  var opt, $canvas, w, h, game, gui;
+  var app, opt, $canvas, w, h, game, gui;
   var objects, objectProperties;
 
   function PhysicsApp(config) {
@@ -23,6 +23,7 @@ var PhysicsApp = (function() {
   }
 
   PhysicsApp.prototype.init = function(){
+    app = this;
     $canvas = $(opt.el);
     w = $canvas.width();
     h = $canvas.height();
@@ -35,7 +36,6 @@ var PhysicsApp = (function() {
   };
 
   PhysicsApp.prototype.loadGame = function(){
-    var _this = this;
     game = new Phaser.Game({
       type: Phaser.WEBGL,
       width: w,
@@ -49,8 +49,8 @@ var PhysicsApp = (function() {
         }
       },
       scene: {
-          create: function(){ _this.onGameCreate(this); },
-          update: function(){ _this.onGameUpdate(this); }
+          create: function(){ app.onGameCreate(this); },
+          update: function(){ app.onGameUpdate(this); }
       }
     });
   };
@@ -63,13 +63,12 @@ var PhysicsApp = (function() {
     controllers.push(gui.add(objectProperties, 'friction', 0, 1));
     controllers.push(gui.add(objectProperties, 'frictionAir', 0, 1));
 
-    var _this = this;
-    var onUpdate = function(){ _this.onGUIChange(); };
+    var onUpdate = function(){ app.onGUIChange(); };
     _.each(controllers, function(c){ c.onFinishChange(onUpdate) });
   };
 
-  PhysicsApp.prototype.onGameCreate = function(scene){
-    scene.matter.world.setBounds(0, 0, w, h);
+  PhysicsApp.prototype.onGameCreate = function(game){
+    game.matter.world.setBounds(0, 0, w, h);
 
     // add random objects
     var sideLenMax = Math.max(Math.round(Math.min(w, h) * 0.08), 20);
@@ -83,16 +82,16 @@ var PhysicsApp = (function() {
 
       if (Math.random() < 0.7) {
           var sides = Phaser.Math.Between(3, 14);
-          objects.push(scene.matter.add.polygon(x, y, sides, radius, _.clone(opt.objectProperties)));
+          objects.push(game.matter.add.polygon(x, y, sides, radius, _.clone(opt.objectProperties)));
       } else {
-          objects.push(scene.matter.add.rectangle(x, y, objW, objH, _.clone(opt.objectProperties)));
+          objects.push(game.matter.add.rectangle(x, y, objW, objH, _.clone(opt.objectProperties)));
       }
     }
 
-    scene.matter.add.mouseSpring();
+    game.matter.add.mouseSpring();
 
     // We need to add extra pointers, as we only get 1 by default
-    scene.input.addPointer(opt.inputsAllowed-1);
+    game.input.addPointer(opt.inputsAllowed-1);
   };
 
   PhysicsApp.prototype.onGUIChange = function(){
