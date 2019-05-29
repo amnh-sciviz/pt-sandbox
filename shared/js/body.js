@@ -3,31 +3,34 @@
 var Body = (function() {
 
   var defaults = {
-    id: "carbon",
+    id: "none",
     index: 0,
-    label: "Carbon",
-    text: "C",
-    type: "element",
-    shape: "circle",
-    radius: 20,
+    label: "No label",
+    text: "",
+    type: "none",
+    shape: "default",
     backgroundColor: "#3bc6e7",
     textColor: "#000000",
     width: 60,
     height: 60,
     // matter properties
-    restitution: 0.2, // a.k.a. bounciness; 0 = no bounce
-    density: 0.5, // default is 0.001
-    friction: 0.9, // default is 0.1
-    frictionAir: 0.05 // default is 0.01
+    physicalProperties: {
+      restitution: 0.2, // a.k.a. bounciness; 0 = no bounce
+      density: 0.5, // default is 0.001
+      friction: 0.9, // default is 0.1
+      frictionAir: 0.05 // default is 0.01
+    }
   };
 
-  var opt, $container, game, physics, $el, el;
+  var opt, $container, game, physics, $el, el, physicalProperties;
 
   function Body(config) {
+    if (config.physicalProperties) config.physicalProperties = _.extend({}, defaults.physicalProperties, config.physicalProperties);
     opt = _.extend({}, defaults, config);
     game = opt.game;
     physics = game.matter;
     $container = opt.$container;
+    physicalProperties = opt.physicalProperties;
 
     this.create();
   }
@@ -52,6 +55,7 @@ var Body = (function() {
     }
     styles.width = width + "px";
     styles.height = height + "px";
+    if (_.contains(['circle', 'square', 'rectangle'], opt.shape)) styles.lineHeight = height + "px";
 
     // determine position
     var radius = Math.max(width, height) * 0.5;
@@ -61,8 +65,8 @@ var Body = (function() {
     var y = Phaser.Math.Between(radius, ch-radius);
     if (opt.x) x = opt.x;
     if (opt.y) y = opt.y;
-    if (opt.rx) x = cw * opt.rx - radius;
-    if (opt.ry) y = ch * opt.ry - radius;
+    if (opt.rx) x = cw * opt.rx;
+    if (opt.ry) y = ch * opt.ry;
 
     // set styles
     $el.css(styles);
@@ -84,12 +88,16 @@ var Body = (function() {
     // });
     // game.input.setDraggable(el);
     // el.input.draggable = true;
-    physics.add.gameObject(el, {
-      restitution: opt.restitution,
-      density: opt.density,
-      friction: opt.friction,
-      frictionAir: opt.frictionAir
-    });
+
+    physics.add.gameObject(el, physicalProperties);
+
+    // set hit area
+    if (_.contains(['circle', 'default'], opt.shape)) el.setCircle();
+
+    // make everything render on top of environments
+    if (opt.type !== "environment") el.depth = 10;
+
+    // console.log(el)
   };
 
   return Body;

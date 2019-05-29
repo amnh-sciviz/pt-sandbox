@@ -9,3 +9,12 @@
   left: 0;
   z-index: 1;
 }
+
+.circle,
+.rectangle,
+.square {
+  text-align: center;
+}
+.circle {
+  border-radius: 50%;
+}

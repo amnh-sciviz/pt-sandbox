@@ -5,13 +5,18 @@
       "label": "Hot and high pressure environment",
       "text": "Hot and high pressure environment",
       "type": "environment",
+      "shape": "rectangle",
       "width": 400,
       "height": 400,
       "rx": 0.5,
       "ry": 0.5,
       "backgroundColor": "#87121a",
       "textColor": "#ffffff",
-      "density": 1.0,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
       "count": 1
     },{
       "id": "oxygen",
@@ -22,7 +27,9 @@
       "radius": 20,
       "backgroundColor": "#3bc6e7",
       "textColor": "#000000",
-      "density": 0.2,
+      "physicalProperties": {
+        "density": 0.2
+      },
       "count": 12
     },{
       "id": "silicon",
@@ -33,18 +40,21 @@
       "radius": 20,
       "backgroundColor": "#5ec62b",
       "textColor": "#000000",
-      "density": 0.4,
+      "physicalProperties": {
+        "density": 0.4
+      },
       "count": 6
     },{
       "id": "quartz",
       "label": "Quartz",
       "text": "Quartz",
       "type": "mineral",
-      "shape": "circle",
       "radius": 30,
       "backgroundImage": "img/quartz.png",
       "textColor": "#000000",
-      "density": 0.7,
+      "physicalProperties": {
+        "density": 0.7
+      },
       "composition": [
         { "id": "oxygen", "count": 4 },
         { "id": "silicon", "count": 1 }
@@ -58,8 +68,10 @@
       "radius": 30,
       "backgroundImage": "img/cristobalite.png",
       "textColor": "#000000",
-      "density": 0.9,
       "environment": "hot",
+      "physicalProperties": {
+        "density": 0.9
+      },
       "composition": [
         { "id": "oxygen", "count": 4 },
         { "id": "silicon", "count": 1 }

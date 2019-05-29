@@ -3,7 +3,7 @@
 var MakeBreakApp = (function() {
 
   var app, opt, $canvas, w, h, game, gui;
-  var bodies, objects, objectProperties, $domContainer;
+  var bodies, objects, physicalProperties, $domContainer;
 
   function MakeBreakApp(config) {
     var defaults = {
@@ -11,7 +11,7 @@ var MakeBreakApp = (function() {
       configUrl: 'config.json',
       contentUrl: 'content.json',
       inputsAllowed: 5,
-      objectProperties: {
+      physicalProperties: {
         restitution: 0.2, // a.k.a. bounciness; 0 = no bounce
         density: 0.5, // default is 0.001
         friction: 0.9, // default is 0.1
@@ -30,7 +30,7 @@ var MakeBreakApp = (function() {
     h = $canvas.height();
 
     objects = [];
-    objectProperties = _.clone(opt.objectProperties);
+    physicalProperties = _.clone(opt.physicalProperties);
 
     $.when(
       $.getJSON(opt.configUrl),
@@ -73,9 +73,9 @@ var MakeBreakApp = (function() {
   MakeBreakApp.prototype.loadGUI = function(){
     gui = new dat.GUI();
     var controllers = [];
-    controllers.push(gui.add(objectProperties, 'restitution', 0, 1));
-    controllers.push(gui.add(objectProperties, 'friction', 0, 1));
-    controllers.push(gui.add(objectProperties, 'frictionAir', 0, 1));
+    controllers.push(gui.add(physicalProperties, 'restitution', 0, 1));
+    controllers.push(gui.add(physicalProperties, 'friction', 0, 1));
+    controllers.push(gui.add(physicalProperties, 'frictionAir', 0, 1));
 
     var onUpdate = function(){ app.onGUIChange(); };
     _.each(controllers, function(c){ c.onFinishChange(onUpdate) });
@@ -88,7 +88,7 @@ var MakeBreakApp = (function() {
     if (!$domContainer.length) console.log("Could not find DOM container!");
     bodies = [];
     _.each(objects, function(obj){
-      obj = _.extend({}, objectProperties, obj);
+      if (obj.physicalProperties) obj.physicalProperties = _.extend({}, physicalProperties, obj.physicalProperties);
       var count = obj.count;
       if (count && count > 0) {
         _.times(count, function(i){
