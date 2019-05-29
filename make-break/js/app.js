@@ -39,15 +39,14 @@ var MakeBreakApp = (function() {
     ).done(function(config, content){
       config = config[0];
       opt = _.extend({}, opt, config);
-      objects = content[0].objects;
+      objects = app.parseObjects(content[0].objects);
       console.log('Config and content loaded.');
       app.loadGame();
-      app.loadGUI();
     });
   };
 
   MakeBreakApp.prototype.loadGame = function(){
-    game = new Phaser.Game({
+    var phaserGame = new Phaser.Game({
       type: Phaser.WEBGL,
       width: w,
       height: h,
@@ -65,7 +64,7 @@ var MakeBreakApp = (function() {
       },
       scene: {
         create: function(){ app.onGameCreate(this); },
-        update: function(){ app.onGameUpdate(this); }
+        // update: function(){ app.onGameUpdate(this); }
       }
     });
   };
@@ -81,18 +80,39 @@ var MakeBreakApp = (function() {
     _.each(controllers, function(c){ c.onFinishChange(onUpdate) });
   };
 
-  MakeBreakApp.prototype.onGameCreate = function(game){
+  MakeBreakApp.prototype.loadListeners = function(){
+    game.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
+      app.onCollision(bodyA, bodyB);
+    });
+  };
+
+  MakeBreakApp.prototype.onCollision = function(matterBodyA, matterBodyB) {
+    var idA = matterBodyA.label;
+    var idB = matterBodyB.label;
+    var bodyA = bodies[idA];
+    var bodyB = bodies[idB];
+
+    if (bodyA === undefined || bodyB === undefined) return;
+
+    if (bodyA.canCreateCompositeWith(bodyB)) {
+      
+    }
+  };
+
+  MakeBreakApp.prototype.onGameCreate = function(_game){
+    game = _game;
     game.matter.world.setBounds(0, 0, w, h);
 
     $domContainer = $canvas.children('div').first();
     if (!$domContainer.length) console.log("Could not find DOM container!");
-    bodies = [];
+    bodies = {};
     _.each(objects, function(obj){
       if (obj.physicalProperties) obj.physicalProperties = _.extend({}, physicalProperties, obj.physicalProperties);
       var count = obj.count;
       if (count && count > 0) {
         _.times(count, function(i){
-          bodies.push(new Body(_.extend({}, obj, {index: i, game: game, $container: $domContainer})));
+          var body = new Body(_.extend({}, obj, {index: i, game: game, $container: $domContainer}));
+          bodies[body.id] = body;
         });
       }
     });
@@ -101,6 +121,9 @@ var MakeBreakApp = (function() {
 
     // We need to add extra pointers, as we only get 1 by default
     game.input.addPointer(opt.inputsAllowed-1);
+
+    app.loadGUI();
+    app.loadListeners();
   };
 
   MakeBreakApp.prototype.onGUIChange = function(){
@@ -109,6 +132,25 @@ var MakeBreakApp = (function() {
 
   MakeBreakApp.prototype.onGameUpdate = function(){
 
+  };
+
+  MakeBreakApp.prototype.parseObjects = function(propList){
+    var pairs = _.map(propList, function(p){ return [p.id, p]; });
+    var lookup = _.object(pairs)
+
+    var parsedList = _.map(propList, function(p){
+      if (p.canCreate && p.canCreate.length) {
+        var canCreateObjects = [];
+        _.each(p.canCreate, function(id){
+          var pfound = lookup[id];
+          if (pfound) canCreateObjects.push(_.clone(pfound))
+        });
+        p.canCreateObjects = canCreateObjects;
+      }
+      return p;
+    });
+
+    return parsedList;
   };
 
   return MakeBreakApp;

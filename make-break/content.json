@@ -30,6 +30,7 @@
       "physicalProperties": {
         "density": 0.2
       },
+      "canCreate": ["cristobalite", "quartz"],
       "count": 12
     },{
       "id": "silicon",
@@ -43,6 +44,7 @@
       "physicalProperties": {
         "density": 0.4
       },
+      "canCreate": ["cristobalite", "quartz"],
       "count": 6
     },{
       "id": "quartz",
@@ -57,7 +59,7 @@
       },
       "composition": [
         { "id": "oxygen", "count": 4 },
-        { "id": "silicon", "count": 1 }
+        { "id": "silicon", "count": 1, "centroid": true }
       ]
     },{
       "id": "cristobalite",
@@ -74,7 +76,7 @@
       },
       "composition": [
         { "id": "oxygen", "count": 4 },
-        { "id": "silicon", "count": 1 }
+        { "id": "silicon", "count": 1, "centroid": true }
       ]
     }
   ]
