@@ -43,6 +43,7 @@ var MakeBreakApp = (function() {
       objectLookup = _.object(_.map(objects, function(o){ return [o.id, _.clone(o)]; }));
       console.log('Config and content loaded.');
       app.loadGame();
+      app.loadSounds();
     });
   };
 
@@ -92,6 +93,12 @@ var MakeBreakApp = (function() {
     });
   };
 
+  MakeBreakApp.prototype.loadSounds = function(){
+    if (opt.makeSound) this.makeSound = new Sound(opt.makeSound);
+    if (opt.breakSound) this.breakSound = new Sound(opt.breakSound);
+    if (opt.collideSound) this.collideSound = new Sound(opt.collideSound);
+  };
+
   MakeBreakApp.prototype.onCollision = function(matterBodyA, matterBodyB) {
     var idA = matterBodyA.label;
     var idB = matterBodyB.label;
@@ -118,6 +125,7 @@ var MakeBreakApp = (function() {
       delete bodies[idB];
       // add new body
       bodies[newBody.id] = newBody;
+      this.makeSound && this.makeSound.playPercent(1.0-newBody.getWeight());
       return;
     }
 
@@ -130,8 +138,11 @@ var MakeBreakApp = (function() {
       _.each(newBodies, function(body){
         bodies[body.id] = body;
       });
+      this.breakSound && this.breakSound.playSprite("break");
       return;
     }
+
+    this.collideSound && this.collideSound.playSprite("collide");
 
   };
 

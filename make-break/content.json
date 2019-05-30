@@ -50,6 +50,7 @@
       "id": "SiO",
       "label": "Silicon oxide",
       "type": "compound",
+      "weight": 0.1,
       "physicalProperties": {
         "density": 0.001
       },
@@ -60,6 +61,7 @@
       "id": "SiO2",
       "label": "Silicon dioxide",
       "type": "compound compound2",
+      "weight": 0.4,
       "physicalProperties": {
         "density": 0.001
       },
@@ -70,6 +72,7 @@
       "id": "SiO3",
       "label": "Silicon trioxide",
       "type": "compound compound3",
+      "weight": 0.6,
       "physicalProperties": {
         "density": 0.001
       },
@@ -83,6 +86,7 @@
       "id": "quartz",
       "label": "Quartz",
       "type": "mineral",
+      "weight": 0.8,
       "physicalProperties": {
         "density": 0.7
       },
@@ -94,6 +98,7 @@
       "id": "cristobalite",
       "label": "Cristobalite",
       "type": "mineral",
+      "weight": 1.0,
       "physicalProperties": {
         "density": 0.9
       },

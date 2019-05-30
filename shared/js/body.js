@@ -9,6 +9,7 @@ var Body = (function() {
     text: "",
     type: "none",
     shape: "circle",
+    weight: 0.5,
     // matter properties
     physicalProperties: {
       restitution: 0.5, // a.k.a. bounciness; 0 = no bounce
@@ -214,6 +215,10 @@ var Body = (function() {
 
   Body.prototype.destroyBody = function(){
     this.el.destroy();
+  };
+
+  Body.prototype.getWeight = function(){
+    return this.opt.weight;
   };
 
   Body.prototype.isEnvironment = function(){
