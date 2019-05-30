@@ -58,7 +58,7 @@ var MakeBreakApp = (function() {
         default: 'matter',
         matter: {
           gravity: { y: 0 },
-          debug: true
+          // debug: true
         }
       },
       dom: {
