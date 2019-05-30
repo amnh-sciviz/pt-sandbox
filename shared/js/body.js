@@ -31,13 +31,66 @@ var Body = (function() {
 
     this.physicalProperties = _.clone(opt.physicalProperties);
     this.reactsWith = _.clone(opt.reactsWith);
-    this.composition = _.clone(opt.composition);
+    this.composition = opt.composition;
     this.reactId = opt.id;
     this.environment = "none";
     this.opt = opt;
 
     this.create();
   }
+
+  Body.prototype.breakApart = function(objects){
+    var newBodies = [];
+
+    if (!this.composition || !this.composition.length) return [];
+
+    var mBody = this.matterBody;
+    var x = mBody.position.x;
+    var y = mBody.position.y;
+    var w = this.el.width;
+    var h = this.el.height;
+    var radius = Math.max(w, h) * 0.5;
+    var u = mBody.velocity.x;
+    var v = mBody.velocity.y;
+
+    _.each(this.composition, function(part){
+      var id = part.id;
+      var props = objects[id];
+      if (props === undefined) return;
+      var count = part.count ? part.count : 1;
+      var rx = radius * Math.random();
+      var ry = radius * Math.random();
+      _.times(count, function(i){
+        var newBody = new Body(_.extend({}, props, {
+          game: game,
+          $container: $container,
+          x: x + rx,
+          y: y + ry,
+          velocity: { x: u, y: v }
+        }));
+        newBodies.push(newBody);
+      });
+    });
+
+    // delete existing body
+    this.destroyBody();
+
+    return newBodies;
+  };
+
+  Body.prototype.breakWith = function(bodyB, objects){
+    var compositionA = this.composition;
+    var compositionB = bodyB.composition;
+
+    // check if we're the same and are made up of other bodies
+    if (!compositionA || !compositionB || this.reactId !== bodyB.reactId) return false;
+
+    // delete the existing bodies
+    var newBodiesA = this.breakApart(objects);
+    var newBodiesB = bodyB.breakApart(objects);
+
+    return newBodiesA.concat(newBodiesB);
+  };
 
   Body.prototype.combineWith = function(bodyB, objects){
     var reactsWith = this.reactsWith;
@@ -131,7 +184,7 @@ var Body = (function() {
     // add element to container
     $container.append($el);
     var el = game.add.dom(x, y, "#"+id);
-    // console.log(physicalProperties)
+    // console.log(this.physicalProperties)
     physics.add.gameObject(el, this.physicalProperties);
 
     // set hit area
@@ -144,12 +197,15 @@ var Body = (function() {
     el.body.label = id;
     this.$el = $el;
     this.el = el;
-    // console.log(el)
+
     this.matterBody = el.body;
 
     if (opt.angle) el.setAngle(opt.angle);
     if (opt.angularVelocity) el.setAngularVelocity(opt.angularVelocity);
     if (opt.velocity) el.setVelocity(opt.velocity.x, opt.velocity.y);
+
+    el.body.restitution = this.physicalProperties.restitution;
+    // console.log(el)
   };
 
   Body.prototype.destroyBody = function(){

@@ -106,6 +106,18 @@ var MakeBreakApp = (function() {
       return;
     }
 
+    var newBodies = bodyA.breakWith(bodyB, objectLookup);
+    if (newBodies && newBodies.length) {
+      // delete collided bodies
+      delete bodies[idA];
+      delete bodies[idB];
+      // add new bodies
+      _.each(newBodies, function(body){
+        bodies[body.id] = body;
+      });
+      return;
+    }
+
   };
 
   MakeBreakApp.prototype.onGameCreate = function(_game){
