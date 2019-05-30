@@ -33,6 +33,7 @@ var Body = (function() {
     this.reactsWith = _.clone(opt.reactsWith);
     this.composition = opt.composition;
     this.reactId = opt.id;
+    this.bodyType = opt.type;
     this.environment = "none";
     this.opt = opt;
 
@@ -102,8 +103,11 @@ var Body = (function() {
 
     // check to see if this reaction happens in this environment
     if (_.isObject(reaction)) {
-      if (reaction[this.environment] === undefined) return false;
-      reaction = reaction[this.environment];
+      var envA = this.environment;
+      var envB = bodyB.environment;
+      var env = envA !== "none" ? envA : envB;
+      if (reaction[env] === undefined) return false;
+      reaction = reaction[env];
     }
 
     // retrieve new object
@@ -151,8 +155,8 @@ var Body = (function() {
     var index = opt.index > 0 ? opt.index : Math.round(Math.random() * 99999999999);
     var id = opt.id + index;
     this.id = id;
-    var className = "body-object " + opt.shape + " " + opt.type + " " + opt.id;
-    var $el = $('<div id="'+id+'" class="body-object-wrapper"><div class="'+className+'" aria-label="'+opt.label+'">'+opt.text+'</div></div>');
+    var className = "body-object " + opt.shape + " " + this.bodyType + " " + opt.id;
+    var $el = $('<div id="'+id+'" class="body-object-wrapper"><a class="'+className+'" aria-label="'+opt.label+'">'+opt.text+'</a></div>');
 
     // set styles
     var styles = {};
@@ -192,7 +196,7 @@ var Body = (function() {
     // el.applyForce({x: 100, y: 100});
 
     // make everything render on top of environments
-    if (opt.type !== "environment") el.depth = 10;
+    if (this.bodyType !== "environment") el.depth = 10;
 
     el.body.label = id;
     this.$el = $el;
@@ -210,6 +214,20 @@ var Body = (function() {
 
   Body.prototype.destroyBody = function(){
     this.el.destroy();
+  };
+
+  Body.prototype.isEnvironment = function(){
+    return this.bodyType === "environment";
+  };
+
+  Body.prototype.onEnvironmentEnter = function(env){
+    this.environment = env.reactId;
+    this.$el.addClass(env.reactId);
+  };
+
+  Body.prototype.onEnvironmentLeave = function(env){
+    this.environment = "none";
+    this.$el.removeClass(env.reactId);
   };
 
   return Body;

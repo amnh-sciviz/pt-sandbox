@@ -93,7 +93,7 @@
     },{
       "id": "cristobalite",
       "label": "Cristobalite",
-      "environment": "hot",
+      "type": "mineral",
       "physicalProperties": {
         "density": 0.9
       },

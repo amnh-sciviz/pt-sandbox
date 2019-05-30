@@ -15,6 +15,15 @@
   z-index: 1;
 }
 
+.body-object {
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+.hot .body-object {
+  opacity: 0.7;
+}
+
 .environment {
   text-align: center;
 }

@@ -82,7 +82,12 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.loadListeners = function(){
+    game.matter.world.on('collisionend', function (event, bodyA, bodyB) {
+      // console.log('collision end')
+      app.onCollisionEnd(bodyA, bodyB);
+    });
     game.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
+      // console.log('collision start')
       app.onCollision(bodyA, bodyB);
     });
   };
@@ -94,6 +99,16 @@ var MakeBreakApp = (function() {
     var bodyB = bodies[idB];
 
     if (bodyA === undefined || bodyB === undefined) return;
+
+    // check for environment
+    if (bodyA.isEnvironment()) {
+      bodyB.onEnvironmentEnter(bodyA);
+      return;
+    }
+    if (bodyB.isEnvironment()) {
+      bodyA.onEnvironmentEnter(bodyB);
+      return;
+    }
 
     // check for reaction
     var newBody = bodyA.combineWith(bodyB, objectLookup);
@@ -118,6 +133,25 @@ var MakeBreakApp = (function() {
       return;
     }
 
+  };
+
+  MakeBreakApp.prototype.onCollisionEnd = function(matterBodyA, matterBodyB){
+    var idA = matterBodyA.label;
+    var idB = matterBodyB.label;
+    var bodyA = bodies[idA];
+    var bodyB = bodies[idB];
+
+    if (bodyA === undefined || bodyB === undefined) return;
+
+    // check for environment
+    if (bodyA.isEnvironment()) {
+      bodyB.onEnvironmentLeave(bodyA);
+      return;
+    }
+    if (bodyB.isEnvironment()) {
+      bodyA.onEnvironmentLeave(bodyB);
+      return;
+    }
   };
 
   MakeBreakApp.prototype.onGameCreate = function(_game){
