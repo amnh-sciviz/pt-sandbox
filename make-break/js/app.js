@@ -3,7 +3,7 @@
 var MakeBreakApp = (function() {
 
   var app, opt, $canvas, w, h, game, gui;
-  var bodies, objects, physicalProperties, $domContainer;
+  var bodies, objects, objectLookup, physicalProperties, $domContainer;
 
   function MakeBreakApp(config) {
     var defaults = {
@@ -12,9 +12,9 @@ var MakeBreakApp = (function() {
       contentUrl: 'content.json',
       inputsAllowed: 5,
       physicalProperties: {
-        restitution: 0.2, // a.k.a. bounciness; 0 = no bounce
-        density: 0.5, // default is 0.001
-        friction: 0.9, // default is 0.1
+        restitution: 0.5, // a.k.a. bounciness; 0 = no bounce
+        density: 0.4, // default is 0.001
+        friction: 0.4, // default is 0.1
         frictionAir: 0.05 // default is 0.01
       }
     };
@@ -40,6 +40,7 @@ var MakeBreakApp = (function() {
       config = config[0];
       opt = _.extend({}, opt, config);
       objects = app.parseObjects(content[0].objects);
+      objectLookup = _.object(_.map(objects, function(o){ return [o.id, _.clone(o)]; }));
       console.log('Config and content loaded.');
       app.loadGame();
     });
@@ -94,9 +95,17 @@ var MakeBreakApp = (function() {
 
     if (bodyA === undefined || bodyB === undefined) return;
 
-    if (bodyA.canCreateCompositeWith(bodyB)) {
-      
+    // check for reaction
+    var newBody = bodyA.combineWith(bodyB, objectLookup);
+    if (newBody) {
+      // delete collided bodies
+      delete bodies[idA];
+      delete bodies[idB];
+      // add new body
+      bodies[newBody.id] = newBody;
+      return;
     }
+
   };
 
   MakeBreakApp.prototype.onGameCreate = function(_game){
@@ -106,7 +115,8 @@ var MakeBreakApp = (function() {
     $domContainer = $canvas.children('div').first();
     if (!$domContainer.length) console.log("Could not find DOM container!");
     bodies = {};
-    _.each(objects, function(obj){
+    _.each(objects, function(props){
+      var obj = _.clone(props);
       if (obj.physicalProperties) obj.physicalProperties = _.extend({}, physicalProperties, obj.physicalProperties);
       var count = obj.count;
       if (count && count > 0) {
@@ -135,22 +145,23 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.parseObjects = function(propList){
-    var pairs = _.map(propList, function(p){ return [p.id, p]; });
-    var lookup = _.object(pairs)
-
-    var parsedList = _.map(propList, function(p){
-      if (p.canCreate && p.canCreate.length) {
-        var canCreateObjects = [];
-        _.each(p.canCreate, function(id){
-          var pfound = lookup[id];
-          if (pfound) canCreateObjects.push(_.clone(pfound))
-        });
-        p.canCreateObjects = canCreateObjects;
-      }
-      return p;
-    });
-
-    return parsedList;
+    return propList;
+    // var pairs = _.map(propList, function(p){ return [p.id, p]; });
+    // var lookup = _.object(pairs)
+    //
+    // var parsedList = _.map(propList, function(p){
+    //   if (p.canCreate && p.canCreate.length) {
+    //     var canCreateObjects = [];
+    //     _.each(p.canCreate, function(id){
+    //       var pfound = lookup[id];
+    //       if (pfound) canCreateObjects.push(_.clone(pfound))
+    //     });
+    //     p.canCreateObjects = canCreateObjects;
+    //   }
+    //   return p;
+    // });
+    //
+    // return parsedList;
   };
 
   return MakeBreakApp;

@@ -1,3 +1,8 @@
+:root {
+  --mwidth: 40px;
+  --mheight: 40px;
+}
+
 .canvas {
   background: black;
   color: white;
@@ -10,11 +15,76 @@
   z-index: 1;
 }
 
-.circle,
-.rectangle,
-.square {
+.environment {
   text-align: center;
 }
-.circle {
-  border-radius: 50%;
+.element,
+.compound,
+.mineral {
+  width: var(--mwidth);
+  height: var(--mheight);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+.compound,
+.mineral {
+  animation: bounceIn 1s;
+}
+.mineral {
+  animation-duration: 0.4s;
+}
+.compound {
+  width: calc(var(--mwidth)*3);
+}
+.compound2,
+.compound3 {
+  width: calc(var(--mwidth)*5);
+}
+.compound3 {
+  height: calc(var(--mheight)*3);
+}
+.mineral {
+  width: calc(var(--mwidth)*3);
+  height: calc(var(--mheight)*3);
+}
+
+.Si { background-image: url(../img/Si.png); }
+.O { background-image: url(../img/O.png); }
+.SiO { background-image: url(../img/SiO.png); }
+.SiO2 { background-image: url(../img/SiO2.png); }
+.SiO3 { background-image: url(../img/SiO3.png); }
+.quartz { background-image: url(../img/quartz.png); }
+.cristobalite { background-image: url(../img/cristobalite.png); }
+
+@keyframes bounceIn {
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  20% {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  40% {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+  80% {
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
 }

@@ -19,64 +19,87 @@
       },
       "count": 1
     },{
-      "id": "oxygen",
+      "id": "O",
       "label": "Oxygen",
-      "text": "O",
       "type": "element",
-      "shape": "circle",
-      "radius": 20,
-      "backgroundColor": "#3bc6e7",
-      "textColor": "#000000",
       "physicalProperties": {
-        "density": 0.2
+        "density": 0.001
       },
-      "canCreate": ["cristobalite", "quartz"],
+      "reactsWith": {
+        "Si": "SiO",
+        "SiO": "SiO2",
+        "SiO2": "SiO3",
+        "SiO3": {
+          "hot": "cristobalite",
+          "none": "quartz"
+        }
+      },
       "count": 12
     },{
-      "id": "silicon",
+      "id": "Si",
       "label": "Silicon",
-      "text": "S",
       "type": "element",
-      "shape": "circle",
-      "radius": 20,
-      "backgroundColor": "#5ec62b",
-      "textColor": "#000000",
       "physicalProperties": {
-        "density": 0.4
+        "density": 0.001
       },
-      "canCreate": ["cristobalite", "quartz"],
+      "reactsWith": {
+        "O": "SiO"
+      },
       "count": 6
+    },{
+      "id": "SiO",
+      "label": "Silicon oxide",
+      "type": "compound",
+      "physicalProperties": {
+        "density": 0.001
+      },
+      "reactsWith": {
+        "O": "SiO2"
+      }
+    },{
+      "id": "SiO2",
+      "label": "Silicon dioxide",
+      "type": "compound compound2",
+      "physicalProperties": {
+        "density": 0.001
+      },
+      "reactsWith": {
+        "O": "SiO3"
+      }
+    },{
+      "id": "SiO3",
+      "label": "Silicon trioxide",
+      "type": "compound compound3",
+      "physicalProperties": {
+        "density": 0.001
+      },
+      "reactsWith": {
+        "O": {
+          "hot": "cristobalite",
+          "none": "quartz"
+        }
+      }
     },{
       "id": "quartz",
       "label": "Quartz",
-      "text": "Quartz",
       "type": "mineral",
-      "radius": 30,
-      "backgroundImage": "img/quartz.png",
-      "textColor": "#000000",
       "physicalProperties": {
         "density": 0.7
       },
       "composition": [
-        { "id": "oxygen", "count": 4 },
-        { "id": "silicon", "count": 1, "centroid": true }
+        { "id": "O", "count": 4 },
+        { "id": "Si", "count": 1 }
       ]
     },{
       "id": "cristobalite",
       "label": "Cristobalite",
-      "text": "Cristobalite",
-      "type": "mineral",
-      "shape": "circle",
-      "radius": 30,
-      "backgroundImage": "img/cristobalite.png",
-      "textColor": "#000000",
       "environment": "hot",
       "physicalProperties": {
         "density": 0.9
       },
       "composition": [
-        { "id": "oxygen", "count": 4 },
-        { "id": "silicon", "count": 1, "centroid": true }
+        { "id": "O", "count": 4 },
+        { "id": "Si", "count": 1 }
       ]
     }
   ]

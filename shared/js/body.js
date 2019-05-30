@@ -8,73 +8,119 @@ var Body = (function() {
     label: "No label",
     text: "",
     type: "none",
-    shape: "default",
-    backgroundColor: "#3bc6e7",
-    textColor: "#000000",
-    width: 60,
-    height: 60,
+    shape: "circle",
     // matter properties
     physicalProperties: {
-      restitution: 0.2, // a.k.a. bounciness; 0 = no bounce
-      density: 0.5, // default is 0.001
-      friction: 0.9, // default is 0.1
+      restitution: 0.5, // a.k.a. bounciness; 0 = no bounce
+      density: 0.001, // default is 0.001
+      friction: 0.4, // default is 0.1
       frictionAir: 0.05 // default is 0.01
     }
   };
 
-  var opt, $container, game, physics, $el, el;
-  var physicalProperties, combiners;
+  var $container, game, physics;
 
   function Body(config) {
     if (config.physicalProperties) config.physicalProperties = _.extend({}, defaults.physicalProperties, config.physicalProperties);
-    opt = _.extend({}, defaults, config);
+    var opt = _.extend({}, defaults, config);
+
+    // globals
     game = opt.game;
     physics = game.matter;
     $container = opt.$container;
-    physicalProperties = opt.physicalProperties;
 
-    this.preload();
+    this.physicalProperties = _.clone(opt.physicalProperties);
+    this.reactsWith = _.clone(opt.reactsWith);
+    this.composition = _.clone(opt.composition);
+    this.reactId = opt.id;
+    this.environment = "none";
+    this.opt = opt;
+
     this.create();
   }
 
-  Body.prototype.canCreateCompositeWith = function(bodyB){
-    var returnValue = false;
+  Body.prototype.combineWith = function(bodyB, objects){
+    var reactsWith = this.reactsWith;
 
-    _.each(combiners, function(c){
-      var ids = _.keys(c.combinesWith);
-      if (_.contains(ids, bodyB.id)) returnValue = true;
-    });
+    if (!reactsWith) return false;
+    var reaction = reactsWith[bodyB.reactId];
+    // console.log(reactsWith, bodyB.reactId);
+    if (reaction === undefined) return false;
 
-    return returnValue;
+    // check to see if this reaction happens in this environment
+    if (_.isObject(reaction)) {
+      if (reaction[this.environment] === undefined) return false;
+      reaction = reaction[this.environment];
+    }
+
+    // retrieve new object
+    var newObject = _.clone(objects[reaction]);
+    if (newObject === undefined) return false;
+
+    var mBodyA = this.matterBody;
+    var mBodyB = bodyB.matterBody;
+
+    // determine position and velocity of new object
+    // var magA = Math.sqrt(mBodyA.velocity.x*mBodyA.velocity.x + mBodyA.velocity.y*mBodyA.velocity.y);
+    // var magB = Math.sqrt(mBodyB.velocity.x*mBodyB.velocity.x + mBodyB.velocity.y*mBodyB.velocity.y);
+    // var fasterBody = magA > magB ? mBodyA : mBodyB;
+    // var slowerBody = magA > magB ? mBodyB : mBodyA;
+    // var x = slowerBody.position.x;
+    // var y = slowerBody.position.y;
+    var x = Phaser.Math.Average([mBodyA.position.x, mBodyB.position.x]);
+    var y = Phaser.Math.Average([mBodyA.position.y, mBodyB.position.y]);
+    var angle = Phaser.Math.Average([mBodyA.angle, mBodyB.angle]);
+    var angularVelocity = Phaser.Math.Average([mBodyA.angularVelocity, mBodyB.angularVelocity]);
+    var u = Phaser.Math.Average([mBodyA.velocity.x, mBodyB.velocity.x]);
+    var v = Phaser.Math.Average([mBodyA.velocity.y, mBodyB.velocity.y]);
+
+    // delete the existing bodies
+    this.destroyBody();
+    bodyB.destroyBody();
+
+    // create new body
+    var newBody = new Body(_.extend({}, newObject, {
+      game: game,
+      $container: $container,
+      x: x,
+      y: y,
+      angle: angle,
+      angularVelocity: angularVelocity,
+      velocity: { x: u, y: v }
+    }));
+
+    return newBody;
+
   };
 
   Body.prototype.create = function(){
-    var id = opt.id + opt.index;
+    var opt = this.opt;
+    var index = opt.index > 0 ? opt.index : Math.round(Math.random() * 99999999999);
+    var id = opt.id + index;
     this.id = id;
     var className = "body-object " + opt.shape + " " + opt.type + " " + opt.id;
-    $el = $('<div id="'+id+'" class="'+className+'" aria-label="'+opt.label+'">'+opt.text+'</div>');
+    var $el = $('<div id="'+id+'" class="body-object-wrapper"><div class="'+className+'" aria-label="'+opt.label+'">'+opt.text+'</div></div>');
 
-    var styles = {
-      "background": opt.backgroundColor,
-      "color": opt.textColor
-    };
-    if (opt.backgroundImage) styles.background = 'url('+opt.backgroundImage+') no-repeat';
-
-    // determine size
-    var width = opt.width;
-    var height = opt.height;
+    // set styles
+    var styles = {};
+    if (opt.backgroundColor) styles.background = opt.backgroundColor;
+    if (opt.textColor) styles.color = opt.textColor;
+    if (opt.backgroundImage) styles.backgroundImage = 'url('+opt.backgroundImage+')';
+    if (opt.width) styles.width = opt.width + "px";
+    if (opt.height) styles.height = opt.height + "px";
     if (opt.radius) {
-      width = opt.radius * 2;
       height = opt.radius * 2;
+      styles.width = (opt.radius * 2) + "px";
+      styles.height = (opt.radius * 2) + "px";
     }
-    styles.width = width + "px";
-    styles.height = height + "px";
-    if (_.contains(['circle', 'square', 'rectangle'], opt.shape)) styles.lineHeight = height + "px";
+    if (styles.height) styles.lineHeight = styles.height;
+    $el.css(styles);
 
     // determine position
-    var radius = Math.max(width, height) * 0.5;
     var cw = $container.width();
     var ch = $container.height();
+    var radius = Math.max(cw, ch) * 0.05;
+
     var x = Phaser.Math.Between(radius, cw-radius);
     var y = Phaser.Math.Between(radius, ch-radius);
     if (opt.x) x = opt.x;
@@ -82,52 +128,32 @@ var Body = (function() {
     if (opt.rx) x = cw * opt.rx;
     if (opt.ry) y = ch * opt.ry;
 
-    // set styles
-    $el.css(styles);
-
     // add element to container
     $container.append($el);
-    el = game.add.dom(x, y, "#"+id);
-    physics.add.gameObject(el, physicalProperties);
+    var el = game.add.dom(x, y, "#"+id);
+    // console.log(physicalProperties)
+    physics.add.gameObject(el, this.physicalProperties);
 
     // set hit area
     if (_.contains(['circle', 'default'], opt.shape)) el.setCircle();
+    // el.applyForce({x: 100, y: 100});
 
     // make everything render on top of environments
     if (opt.type !== "environment") el.depth = 10;
 
     el.body.label = id;
     this.$el = $el;
+    this.el = el;
     // console.log(el)
-    // this.matterBody = el.body;
+    this.matterBody = el.body;
+
+    if (opt.angle) el.setAngle(opt.angle);
+    if (opt.angularVelocity) el.setAngularVelocity(opt.angularVelocity);
+    if (opt.velocity) el.setVelocity(opt.velocity.x, opt.velocity.y);
   };
 
-  Body.prototype.preload = function(){
-    // figure out logic for compositions
-    combiners = [];
-    if (opt.canCreateObjects && opt.canCreateObjects.length) {
-      _.each(opt.canCreateObjects, function(obj){
-        if (obj.composition) {
-          var isCentroid = false;
-          var combinesWith = {};
-          var count = 1;
-          _.each(obj.composition, function(el){
-            if (el.id === opt.id) {
-              count = el.count;
-              if (el.centroid) isCentroid = true;
-            } else if (el.id !== opt.id) {
-              combinesWith[el.id] = el.count;
-            }
-          });
-          combiners.push({
-            isCentroid: isCentroid,
-            count: count,
-            combinesWith: combinesWith
-          });
-        }
-      });
-    }
-    this.combiners = combiners;
+  Body.prototype.destroyBody = function(){
+    this.el.destroy();
   };
 
   return Body;
