@@ -2,7 +2,7 @@
 
 var MakeBreakApp = (function() {
 
-  var app, opt, $canvas, w, h, game, gui;
+  var app, opt, $canvas, w, h, phaserGame, game, gui;
   var bodies, objects, objectLookup, physicalProperties, $domContainer;
 
   function MakeBreakApp(config) {
@@ -47,7 +47,7 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.loadGame = function(){
-    var phaserGame = new Phaser.Game({
+    phaserGame = new Phaser.Game({
       type: Phaser.WEBGL,
       width: w,
       height: h,
@@ -57,11 +57,12 @@ var MakeBreakApp = (function() {
         default: 'matter',
         matter: {
           gravity: { y: 0 },
-          // debug: true
+          debug: false
         }
       },
       dom: {
-        createContainer: true
+        createContainer: true,
+        behindCanvas: true
       },
       scene: {
         create: function(){ app.onGameCreate(this); },
@@ -76,6 +77,10 @@ var MakeBreakApp = (function() {
     controllers.push(gui.add(physicalProperties, 'restitution', 0, 1));
     controllers.push(gui.add(physicalProperties, 'friction', 0, 1));
     controllers.push(gui.add(physicalProperties, 'frictionAir', 0, 1));
+
+    // console.log(phaserGame)
+    // console.log(game)
+    // gui.add(game.matter.config, 'debug');
 
     var onUpdate = function(){ app.onGUIChange(); };
     _.each(controllers, function(c){ c.onFinishChange(onUpdate) });

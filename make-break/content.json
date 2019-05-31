@@ -50,6 +50,7 @@
       "id": "SiO",
       "label": "Silicon oxide",
       "type": "compound",
+      "shape": "rectangle",
       "weight": 0.1,
       "physicalProperties": {
         "density": 0.1
@@ -61,6 +62,7 @@
       "id": "SiO2",
       "label": "Silicon dioxide",
       "type": "compound compound2",
+      "shape": "rectangle",
       "weight": 0.4,
       "physicalProperties": {
         "density": 0.2
@@ -72,6 +74,7 @@
       "id": "SiO3",
       "label": "Silicon trioxide",
       "type": "compound compound3",
+      "shape": "rectangle",
       "weight": 0.6,
       "physicalProperties": {
         "density": 0.3
