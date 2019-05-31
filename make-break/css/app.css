@@ -15,6 +15,10 @@
   z-index: 1;
 }
 
+.dg.ac {
+  z-index: 100 !important;
+}
+
 .body-object {
   display: block;
   text-decoration: none;
@@ -54,8 +58,8 @@
   height: calc(var(--mheight)*3);
 }
 .mineral {
-  width: calc(var(--mwidth)*3);
-  height: calc(var(--mheight)*3);
+  width: calc(var(--mwidth)*4);
+  height: calc(var(--mheight)*4);
 }
 
 .Si { background-image: url(../img/Si.png); }

@@ -52,7 +52,7 @@
       "type": "compound",
       "weight": 0.1,
       "physicalProperties": {
-        "density": 0.001
+        "density": 0.1
       },
       "reactsWith": {
         "O": "SiO2"
@@ -63,7 +63,7 @@
       "type": "compound compound2",
       "weight": 0.4,
       "physicalProperties": {
-        "density": 0.001
+        "density": 0.2
       },
       "reactsWith": {
         "O": "SiO3"
@@ -74,7 +74,7 @@
       "type": "compound compound3",
       "weight": 0.6,
       "physicalProperties": {
-        "density": 0.001
+        "density": 0.3
       },
       "reactsWith": {
         "O": {

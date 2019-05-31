@@ -11,18 +11,13 @@ var Body = (function() {
     shape: "circle",
     weight: 0.5,
     // matter properties
-    physicalProperties: {
-      restitution: 0.5, // a.k.a. bounciness; 0 = no bounce
-      density: 0.001, // default is 0.001
-      friction: 0.4, // default is 0.1
-      frictionAir: 0.05 // default is 0.01
-    }
+    physicalProperties: {}
   };
 
   var $container, game, physics;
 
   function Body(config) {
-    if (config.physicalProperties) config.physicalProperties = _.extend({}, defaults.physicalProperties, config.physicalProperties);
+    config.physicalProperties = _.extend({}, defaults.physicalProperties, config.physicalProperties);
     var opt = _.extend({}, defaults, config);
 
     // globals
@@ -54,6 +49,7 @@ var Body = (function() {
     var radius = Math.max(w, h) * 0.5;
     var u = mBody.velocity.x;
     var v = mBody.velocity.y;
+    var physicalProperties = _.clone(this.physicalProperties);
 
     _.each(this.composition, function(part){
       var id = part.id;
@@ -63,7 +59,9 @@ var Body = (function() {
       var rx = radius * Math.random();
       var ry = radius * Math.random();
       _.times(count, function(i){
-        var newBody = new Body(_.extend({}, props, {
+        var newObject  = _.clone(props);
+        newObject.physicalProperties = _.extend({}, physicalProperties, newObject.physicalProperties);
+        var newBody = new Body(_.extend({}, newObject, {
           game: game,
           $container: $container,
           x: x + rx,
@@ -137,6 +135,8 @@ var Body = (function() {
     bodyB.destroyBody();
 
     // create new body
+    var physicalProperties = _.clone(this.physicalProperties);
+    newObject.physicalProperties = _.extend({}, physicalProperties, newObject.physicalProperties);
     var newBody = new Body(_.extend({}, newObject, {
       game: game,
       $container: $container,
@@ -209,7 +209,8 @@ var Body = (function() {
     if (opt.angularVelocity) el.setAngularVelocity(opt.angularVelocity);
     if (opt.velocity) el.setVelocity(opt.velocity.x, opt.velocity.y);
 
-    el.body.restitution = this.physicalProperties.restitution;
+    // console.log(this.physicalProperties)
+    this.update(this.physicalProperties);
     // console.log(el)
   };
 
@@ -233,6 +234,14 @@ var Body = (function() {
   Body.prototype.onEnvironmentLeave = function(env){
     this.environment = "none";
     this.$el.removeClass(env.reactId);
+  };
+
+  Body.prototype.update = function(props){
+    var el = this.el;
+    _.each(props, function(value, key){
+      el.body[key] = value;
+    });
+    this.physicalProperties = _.extend({}, this.physicalProperties, props);
   };
 
   return Body;

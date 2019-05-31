@@ -13,7 +13,6 @@ var MakeBreakApp = (function() {
       inputsAllowed: 5,
       physicalProperties: {
         restitution: 0.5, // a.k.a. bounciness; 0 = no bounce
-        density: 0.4, // default is 0.001
         friction: 0.4, // default is 0.1
         frictionAir: 0.05 // default is 0.01
       }
@@ -198,27 +197,14 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.onGameUpdate = function(){
-
+    // console.log(physicalProperties)
+    _.each(bodies, function(body, id){
+      body.update(physicalProperties);
+    });
   };
 
   MakeBreakApp.prototype.parseObjects = function(propList){
     return propList;
-    // var pairs = _.map(propList, function(p){ return [p.id, p]; });
-    // var lookup = _.object(pairs)
-    //
-    // var parsedList = _.map(propList, function(p){
-    //   if (p.canCreate && p.canCreate.length) {
-    //     var canCreateObjects = [];
-    //     _.each(p.canCreate, function(id){
-    //       var pfound = lookup[id];
-    //       if (pfound) canCreateObjects.push(_.clone(pfound))
-    //     });
-    //     p.canCreateObjects = canCreateObjects;
-    //   }
-    //   return p;
-    // });
-    //
-    // return parsedList;
   };
 
   return MakeBreakApp;
