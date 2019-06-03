@@ -24,8 +24,8 @@
   text-decoration: none;
   color: black;
 }
-.hot .body-object {
-  opacity: 0.7;
+.hot .animator {
+  animation: pulse 1s infinite;
 }
 
 .environment {
@@ -41,7 +41,8 @@
   background-size: contain;
 }
 .compound,
-.mineral {
+.mineral,
+.hot .body-object.created {
   animation: bounceIn 1s;
 }
 .mineral {
@@ -99,5 +100,19 @@
   to {
     opacity: 1;
     transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes pulse {
+  from, to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+
+  50% {
+    -webkit-transform: scale3d(1.05, 1.05, 1.05);
+    transform: scale3d(1.05, 1.05, 1.05);
+    opacity: 0.5;
   }
 }

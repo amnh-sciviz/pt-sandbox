@@ -92,7 +92,7 @@ var MakeBreakApp = (function() {
       app.onCollisionEnd(bodyA, bodyB);
     });
     game.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
-      // console.log('collision start')
+      console.log('collision start')
       app.onCollision(bodyA, bodyB);
     });
   };
@@ -173,6 +173,8 @@ var MakeBreakApp = (function() {
     game = _game;
     game.matter.world.setBounds(0, 0, w, h);
 
+    app.loadListeners();
+
     $domContainer = $canvas.children('div').first();
     if (!$domContainer.length) console.log("Could not find DOM container!");
     bodies = {};
@@ -182,7 +184,19 @@ var MakeBreakApp = (function() {
       var count = obj.count;
       if (count && count > 0) {
         _.times(count, function(i){
-          var body = new Body(_.extend({}, obj, {index: i, game: game, $container: $domContainer}));
+          var x = false;
+          var y = false;
+          var width = false;
+          var height = false;
+          if (obj.type === "environment") {
+            width = w * obj.rw;
+            height = h * obj.rh;
+            x = w * 0.5;
+            y = h - height * 0.5;
+          } else {
+            y = Phaser.Math.Between(h*0.05, h*0.5);
+          }
+          var body = new Body(_.extend({}, obj, {index: i, game: game, $container: $domContainer, x: x, y: y, width: width, height: height}));
           bodies[body.id] = body;
         });
       }
@@ -194,7 +208,7 @@ var MakeBreakApp = (function() {
     game.input.addPointer(opt.inputsAllowed-1);
 
     app.loadGUI();
-    app.loadListeners();
+
   };
 
   MakeBreakApp.prototype.onGUIChange = function(){

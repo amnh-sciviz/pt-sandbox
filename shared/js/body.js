@@ -157,7 +157,7 @@ var Body = (function() {
     var id = opt.id + index;
     this.id = id;
     var className = "body-object " + opt.shape + " " + this.bodyType + " " + opt.id;
-    var $el = $('<div id="'+id+'" class="body-object-wrapper"><a href="#" class="'+className+'" aria-label="'+opt.label+'">'+opt.text+'</a></div>');
+    var $el = $('<div id="'+id+'" class="body-object-wrapper"><div class="animator"><a href="#" class="'+className+'" aria-label="'+opt.label+'">'+opt.text+'</a></div></div>');
 
     // set styles
     var styles = {};

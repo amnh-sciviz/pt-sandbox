@@ -6,10 +6,8 @@
       "text": "Hot and high pressure environment",
       "type": "environment",
       "shape": "rectangle",
-      "width": 400,
-      "height": 400,
-      "rx": 0.5,
-      "ry": 0.5,
+      "rw": 0.4,
+      "rh": 0.4,
       "backgroundColor": "#87121a",
       "textColor": "#ffffff",
       "physicalProperties": {
