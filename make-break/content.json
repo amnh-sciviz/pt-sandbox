@@ -32,7 +32,7 @@
           "none": "quartz"
         }
       },
-      "count": 16
+      "maxCount": 24
     },{
       "id": "Si",
       "label": "Silicon",
@@ -43,7 +43,7 @@
       "reactsWith": {
         "O": "SiO"
       },
-      "count": 4
+      "maxCount": 8
     },{
       "id": "SiO",
       "label": "Silicon oxide",

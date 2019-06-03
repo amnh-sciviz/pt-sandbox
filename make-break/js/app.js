@@ -4,6 +4,7 @@ var MakeBreakApp = (function() {
 
   var app, opt, $canvas, w, h, phaserGame, game, gui;
   var bodies, objects, objectLookup, physicalProperties, $domContainer;
+  var $toolbar;
 
   function MakeBreakApp(config) {
     var defaults = {
@@ -25,6 +26,7 @@ var MakeBreakApp = (function() {
   MakeBreakApp.prototype.init = function(){
     app = this;
     $canvas = $(opt.el);
+    $toolbar = $("#toolbar");
     w = $canvas.width();
     h = $canvas.height();
 
@@ -44,6 +46,13 @@ var MakeBreakApp = (function() {
       app.loadGame();
       app.loadSounds();
     });
+  };
+
+  MakeBreakApp.prototype.addObject = function(props) {
+    var obj = _.clone(props);
+    if (obj.physicalProperties) obj.physicalProperties = _.extend({}, physicalProperties, obj.physicalProperties);
+    var body = new Body(_.extend({}, obj, {game: game, $container: $domContainer}));
+    bodies[body.id] = body;
   };
 
   MakeBreakApp.prototype.loadGame = function(){
@@ -92,8 +101,18 @@ var MakeBreakApp = (function() {
       app.onCollisionEnd(bodyA, bodyB);
     });
     game.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
-      console.log('collision start')
+      // console.log('collision start')
       app.onCollision(bodyA, bodyB);
+    });
+
+    $('.add-element').on('click', function(e){
+      e.preventDefault();
+      var velocity = {
+        x: Phaser.Math.Between(-3, 3),
+        y: 10.0
+      }
+      var props = _.extend({}, objectLookup[$(this).attr('data-id')], {x: e.pageX, y: e.pageY, velocity: velocity});
+      app.addObject(props);
     });
   };
 
@@ -173,32 +192,28 @@ var MakeBreakApp = (function() {
     game = _game;
     game.matter.world.setBounds(0, 0, w, h);
 
-    app.loadListeners();
-
     $domContainer = $canvas.children('div').first();
     if (!$domContainer.length) console.log("Could not find DOM container!");
     bodies = {};
     _.each(objects, function(props){
-      var obj = _.clone(props);
-      if (obj.physicalProperties) obj.physicalProperties = _.extend({}, physicalProperties, obj.physicalProperties);
-      var count = obj.count;
+      var count = props.count;
       if (count && count > 0) {
         _.times(count, function(i){
-          var x = false;
-          var y = false;
-          var width = false;
-          var height = false;
+          var obj = _.clone(props);
           if (obj.type === "environment") {
-            width = w * obj.rw;
-            height = h * obj.rh;
-            x = w * 0.5;
-            y = h - height * 0.5;
+            obj.width = w * obj.rw;
+            obj.height = h * obj.rh;
+            obj.x = w * 0.5;
+            obj.y = h - obj.height * 0.5;
           } else {
-            y = Phaser.Math.Between(h*0.05, h*0.5);
+            obj.y = Phaser.Math.Between(h*0.05, h*0.5);
           }
-          var body = new Body(_.extend({}, obj, {index: i, game: game, $container: $domContainer, x: x, y: y, width: width, height: height}));
-          bodies[body.id] = body;
+          app.addObject(obj, count);
         });
+      }
+      // add buttons if elements
+      if (props.type === "element") {
+        $toolbar.append($('<a href="#" class="add-element button button-'+props.id+'" data-id="'+props.id+'">Add '+props.label+'</a>'))
       }
     });
 
@@ -207,6 +222,7 @@ var MakeBreakApp = (function() {
     // We need to add extra pointers, as we only get 1 by default
     game.input.addPointer(opt.inputsAllowed-1);
 
+    app.loadListeners();
     app.loadGUI();
 
   };
