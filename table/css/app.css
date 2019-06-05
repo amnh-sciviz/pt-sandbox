@@ -149,6 +149,11 @@
 .artificial a {
   background: #292929;
 }
+.element a.active {
+  background: white !important;
+  color: #306091;
+  border-color: white;
+}
 .placeholder div {
   background: #3e3d3d;
   color: #ccc;

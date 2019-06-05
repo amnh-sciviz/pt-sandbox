@@ -70,6 +70,10 @@ var TableApp = (function() {
     $('.button-view').on('click', function(e){
       app.changeView($(this).attr('data-view'), $(this));
     });
+
+    $('.element a').on('click', function(e){
+      $(this).toggleClass('active');
+    });
   };
 
   TableApp.prototype.loadUI = function(data){
