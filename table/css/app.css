@@ -13,12 +13,59 @@
   margin-top: -36vw;
   /* background: red; */
 }
+/* wide screens */
+@media only screen and (min-aspect-ratio: 4/3) {
+  .table {
+    width: 120vh;
+    height: 90vh; /* aspect ratio: 1.33333 */
+    margin-left: -64vh;
+    top: 10px;
+    margin-top: 0;
+  }
+}
+.toolbar {
+  line-height: 40px;
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  bottom: 10px;
+  left: 0;
+  text-align: center;
+}
+.toolbar button {
+  display: inline-block;
+  background: #3e3d3d;
+  color: #ccc;
+  border: 1px solid #3e3d3d;
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 1rem;
+  cursor: pointer;
+}
+.toolbar button:hover {
+  border-color: #ccc;
+}
+.toolbar button.active {
+  background: #ccc;
+  color: #3e3d3d;
+  border: 1px solid #ccc;
+}
+.toolbar button:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.toolbar button:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
 
 .element {
   position: absolute;
   width: 5.5555555556%; /* 1/18 */
   height: 10.526315789%; /* 1/9.5 - extra .5 to account for space for two-row insert */
   text-align: center;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  transform-origin: center center;
 }
 .element > a,
 .element > div {
@@ -52,7 +99,7 @@
 }
 .element .symbol {
   font-size: 1.7rem;
-  margin: 0.7rem 0;
+  margin: 0.6rem 0;
   font-weight: bold;
 }
 .element .name {
@@ -151,14 +198,4 @@
   bottom: 5.2631578945%;
   left: 15.8888888889%;
   border-top: 1px solid #bcbcbe;
-}
-
-/* wide screens */
-@media only screen and (min-aspect-ratio: 4/3) {
-  .table {
-    width: 128vh;
-    height: 96vh; /* aspect ratio: 1.33333 */
-    margin-left: -64vh;
-    margin-top: -48vh;
-  }
 }
