@@ -11,7 +11,10 @@ var TableApp = (function() {
       configUrl: 'config.json',
       contentUrl: 'content.json',
       dataUrl: 'data/elements.csv',
-      baseScaleFactor: 5.0, // for abundance, 100% = x the size (e.g. 10x)
+      scaleFactors: {
+        'Abundance': 5.0,
+        'Density': 0.5
+      }
     };
     opt = _.extend({}, defaults, config);
 
@@ -62,7 +65,7 @@ var TableApp = (function() {
     $('.button-view').removeClass('active');
     $active.addClass('active');
 
-    if (name==="abundance") this.showViewAbundance();
+    if (name !== "default") this.showViewScaled(name);
     else this.showViewDefault();
   };
 
@@ -107,17 +110,20 @@ var TableApp = (function() {
     return parsedData;
   };
 
-  TableApp.prototype.showViewAbundance = function(){
-    _.each(elementData, function(d){
-      var factor = opt.baseScaleFactor * Math.sqrt(d.Abundance);
-      factor = Math.max(factor, 0.2);
-      d.$el.css({'transform': 'scale3d('+factor+','+factor+','+factor+')', 'opacity': 0.8});
-    });
-  };
-
   TableApp.prototype.showViewDefault = function(){
     _.each(elementData, function(d){
       d.$el.css({'transform': '', 'opacity': 1.0});
+    });
+  };
+
+  TableApp.prototype.showViewScaled = function(name){
+    var scaleFactor = opt.scaleFactors[name];
+    _.each(elementData, function(d){
+      var val = d[name];
+      val = Math.sqrt(val);
+      var factor = scaleFactor * val;
+      factor = Math.max(factor, 0.2);
+      d.$el.css({'transform': 'scale3d('+factor+','+factor+','+factor+')', 'opacity': 0.8});
     });
   };
 

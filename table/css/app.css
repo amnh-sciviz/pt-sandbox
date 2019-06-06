@@ -83,6 +83,9 @@
   border: 1px solid #333;
   /* transition: transform 0.4s; */
 }
+.element:hover {
+  z-index: 1000;
+}
 .element a:hover {
   /* transform: translate3d(0, -4px, 0); */
   border-color: #ddd;
@@ -153,6 +156,7 @@
   background: white !important;
   color: #306091;
   border-color: white;
+  animation: pulse 1s infinite;
 }
 .placeholder div {
   background: #3e3d3d;
@@ -174,6 +178,8 @@
 #element-Pu a {
   background: #306091;
 }
+
+
 
 .placeholder-box {
   height: 21.052631578%;
@@ -203,4 +209,18 @@
   bottom: 5.2631578945%;
   left: 15.8888888889%;
   border-top: 1px solid #bcbcbe;
+}
+
+@keyframes pulse {
+  from, to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+
+  50% {
+    -webkit-transform: scale3d(1.05, 1.05, 1.05);
+    transform: scale3d(1.05, 1.05, 1.05);
+    opacity: 0.5;
+  }
 }
