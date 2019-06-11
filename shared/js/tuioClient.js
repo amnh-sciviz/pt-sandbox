@@ -9,8 +9,17 @@ var TuioClient = (function() {
   }
 
   TuioClient.prototype.init = function(){
-    this.socketUrl = this.opt.socketUrl || "ws://" + window.location.host
+    this.socketUrl = this.opt.socketUrl || "ws://" + window.location.host;
+    this.sids = [];
+    this.objects = {};
     this.loadListeners();
+  };
+
+  TuioClient.prototype.getLiveObjects = function(){
+    var objects = this.objects;
+    return _.map(this.sids, function(sid){
+      return objects[sid];
+    });
   };
 
   TuioClient.prototype.loadListeners = function(){
@@ -27,54 +36,41 @@ var TuioClient = (function() {
 
     oscPort.on("message", function (oscMsg) {
       // console.log("An OSC message just arrived!", oscMsg);
-      _this.onMessage(oscMessage);
+      _this.onMessage(oscMsg);
     });
 
     oscPort.open();
   };
 
   TuioClient.prototype.onMessage = function(msg){
-    var bundle = osc.readPacket(msg, osc.defaults);
-    console.log(bundle)
-  };
+    var pType = msg.args[0].value;
+    var rest = _.map(msg.args.slice(1), function(a){ return a.value; });
 
-  TuioClient.prototype.translatePacket = function(packet) {
-
-    // empty 'alive' args appear as a string, not an array
-    var pType = (typeof packet.args === 'string' ? packet.args : packet.args[0]);
-    var rest = (typeof packet.args === 'string' ? [] : packet.args.slice(1));
-
-    this.objects = [];
-    this.profile = packet.address;
-
-    switch (pType) {
-
-      case 'source':
-        this.source = packet.args[1];
-        break;
-
+    switch(pType) {
       case 'set':
-
-        var obj = _.object(profiles[packet.address], rest);
-        obj.profile = packet.address;
-
-        // we should know the source by the time 'set' packets arrive
-        obj.source = this.source;
-        this.objects.push(obj);
+        // map object
+        var obj = _.object(['sid', 'x', 'y', 'dx', 'dy', 'dd'], rest);
+        this.objects[""+obj.sid] = obj;
         break;
 
       case 'alive':
-        this.alive = rest;
-        break;
-
-      case 'fseq':
-        this.seq = rest[0];
+        // parse sids as strings
+        this.sids = _.map(rest, function(v){ return ""+v; });
+        this.retireMissingObjects();
         break;
 
       default:
-        throw 'Unexpected TUIO packet type: ' + pType;
-
+        // ignore everything else
+        break;
     }
+
+  };
+
+  TuioClient.prototype.retireMissingObjects = function(){
+    var sids = this.sids;
+    this.objects = _.omit(this.objects, function(value, sid, object) {
+      return _.contains(sids, sid);
+    });
   };
 
   return TuioClient;

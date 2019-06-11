@@ -40,10 +40,10 @@ Sandbox for Periodic Table interactive prototypes for the Hall of Gems and Miner
 1. Start the web server, socket server, and listen to the TUIO device by running
 
    ```
-   npm tuio
+   npm run tuio
    ```
 
-1. By default, you can go to [localhost:2222/tuio/](http://localhost:2222/tuio/) in a web browser. Alternatively instead of `npm tuio`, you can indicate a custom port:
+1. By default, you can go to [localhost:8080/tuio/](http://localhost:8080/tuio/) in a web browser. Alternatively instead of `npm tuio`, you can indicate a custom port:
 
    ```
    node tuio-server.js 1234

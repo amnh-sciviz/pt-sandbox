@@ -2,12 +2,19 @@
 
 var TuioApp = (function() {
 
-  var opt, $canvas, $touches, $instructions;
+  var opt, $canvas, w, h, $instructions, pixiApp, graphics;
 
   function TuioApp(config) {
     var defaults = {
       el: '#canvas',
-      wsUrl: 'ws://localhost:8080'
+      touchBgColor: 0x205c6a,
+      touchRadius: 30,
+      maxTouches: 32,
+      textStyle: {
+        fill: 0xffffff,
+        fontSize: 22,
+        fontFamily: 'sans-serif'
+      }
     };
     opt = _.extend({}, defaults, config);
 
@@ -15,64 +22,80 @@ var TuioApp = (function() {
   }
 
   TuioApp.prototype.init = function(){
-    $touches = [];
     $canvas = $(opt.el);
-    $instructions = $("#instructions");
+    // $instructions = $("#instructions");
+
+    this.loadUI();
     this.loadListeners();
+    this.render();
   };
 
   TuioApp.prototype.loadListeners = function(){
+    this.tc = new TuioClient();
+
+    $(window).on('resize', function(){
+      w = $canvas.width();
+      h = $canvas.height();
+      this.app.renderer.resize(w, h);
+    });
+
+    // $(document).one('click', function(e){
+    //   $instructions.css("display", "none");
+    // });
+  };
+
+  TuioApp.prototype.loadUI = function(){
+    w = $canvas.width();
+    h = $canvas.height();
+    pixiApp = new PIXI.Application({width: w, height: h, transparent: true, antialias: true});
+    graphics = new PIXI.Graphics();
+
+    for(var i=0; i<opt.maxTouches; i++) {
+      var label = new PIXI.Text("");
+      label.style = _.clone(opt.textStyle);
+      label.anchor.set(0.5, 0.5);
+      graphics.addChild(label);
+    }
+
+    pixiApp.stage.addChild(graphics);
+    $canvas.append(pixiApp.view);
+  };
+
+  TuioApp.prototype.render = function(){
     var _this = this;
 
-    var oscPort = new osc.WebSocketPort({
-      url: opt.wsUrl, // URL to Web Socket server.
-      metadata: true
-    });
+    this.renderTouches();
 
-    oscPort.on("ready", function(){
-      console.log("Ready to receive OSC messages.");
-    });
-
-    oscPort.on("message", function (oscMsg) {
-      console.log("An OSC message just arrived!", oscMsg);
-    });
-
-    oscPort.open();
+    requestAnimationFrame(function(){ _this.render(); });
   };
 
   TuioApp.prototype.renderTouches = function(touches){
-    // hide inactive touches
-    if (touches.length < $touches.length) {
-      _.times($touches.length-touches.length, function(i){
-        var index = touches.length + i;
-        $touches[index].removeClass("active");
-      });
-    }
+    var touches = this.tc.getLiveObjects();
+
+    graphics.clear();
 
     // render active touches
     _.each(touches, function(e, i){
       this.renderTouch(e, i);
     }, this);
+
+    // hide remaining labels
+    for(var i=touches.length; i<opt.maxTouches; i++) {
+      graphics.children[i].text = "";
+    }
   };
 
   TuioApp.prototype.renderTouch = function(event, index){
-    var $touch;
+    var x = event.x * w;
+    var y = event.y * h;
+    graphics.beginFill(opt.touchBgColor, 1);
+    graphics.drawCircle(x, y, opt.touchRadius);
+    graphics.endFill();
 
-    // check to see if we need to add a new touch element
-    if (index >= $touches.length) {
-      $touch = $('<div class="touch"></div>');
-      $canvas.append($touch);
-      $touches.push($touch);
-    } else {
-      $touch = $touches[index];
-    }
-
-    // move and activate touch element
-    var x = event.clientX;
-    var y = event.clientY;
-    $touch.css("transform", "translate3d("+x+"px, "+y+"px, 0)");
-    $touch.html((index+1)+"<div>"+x.toFixed(2) + " " + y.toFixed(2)+"</div>");
-    $touch.addClass("active");
+    var label = graphics.children[index];
+    label.text = event.sid;
+    label.x = x;
+    label.y = y;
   };
 
   return TuioApp;
