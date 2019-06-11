@@ -14,12 +14,12 @@ body {
 
 .touch {
   position: absolute;
-  width: 3vmin;
-  height: 3vmin;
+  width: 6vmin;
+  height: 6vmin;
   text-align: center;
-  line-height: 3vmin;
-  top: -1.5vmin;
-  left: -1.5vmin;
+  line-height: 6vmin;
+  top: -3vmin;
+  left: -3vmin;
   background: #205c6a;
   border-radius: 50%;
   text-align: center;

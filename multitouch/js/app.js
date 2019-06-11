@@ -23,10 +23,13 @@ var MultiTouchApp = (function() {
   MultiTouchApp.prototype.loadTouchListeners = function(){
     var _this = this;
 
+    $canvas.one('touchstart', function(e){
+      $instructions.css("display", "none");
+    });
+
     $canvas.on('touchstart touchmove touchend', function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
-      $instructions.css("display", "none");
        _this.renderTouches(e.touches);
     });
   };
@@ -62,7 +65,8 @@ var MultiTouchApp = (function() {
     var x = event.clientX;
     var y = event.clientY;
     $touch.css("transform", "translate3d("+x+"px, "+y+"px, 0)");
-    $touch.html((index+1)+"<div>"+x.toFixed(2) + " " + y.toFixed(2)+"</div>");
+    // $touch.html((index+1)+"<div>"+x.toFixed(2) + " " + y.toFixed(2)+"</div>");
+    $touch.html((index+1));
     $touch.addClass("active");
   };
 
