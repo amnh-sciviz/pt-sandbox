@@ -25,6 +25,10 @@ body {
   text-align: center;
   color: #fff;
   touch-action: none;
+  opacity: 0;
+}
+.touch.active {
+  opacity: 1;
 }
 .touch > div {
   position: absolute;
