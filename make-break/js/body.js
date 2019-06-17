@@ -157,7 +157,7 @@ var Body = (function() {
     var id = opt.id + index;
     this.id = id;
     var className = "body-object " + opt.shape + " " + this.bodyType + " " + opt.id;
-    var $el = $('<div id="'+id+'" class="body-object-wrapper"><div class="animator"><a href="#" class="'+className+'" aria-label="'+opt.label+'">'+opt.text+'</a></div></div>');
+    var $el = $('<div id="'+id+'" class="body-object-wrapper"><div class="animator"><a href="#" class="'+className+'" aria-label="'+opt.label+'" data-id="'+id+'">'+opt.text+'</a></div></div>');
 
     // set styles
     var styles = {};
@@ -226,6 +226,23 @@ var Body = (function() {
     return this.bodyType === "environment";
   };
 
+  Body.prototype.isDragging = function(){
+    return this.touchId !== undefined && this.touchId !== false;
+  };
+
+  Body.prototype.onCollision = function(bodyB){
+    // we only care about the case where I am being dragged and the other body is not
+    if (!this.isDragging() || bodyB.isDragging()) return false;
+
+    // set velocity to dragged velocity
+    this.el.setVelocity(this.velocityX, this.velocityY);
+
+    // apply the force from the drag event and release the touch
+    // console.log("applying force", this.velocityX, this.velocityY)
+    bodyB.el.applyForce(this.matterBody.position, {x: this.velocityX, y: this.velocityY});
+    this.touchId = false;
+  };
+
   Body.prototype.onEnvironmentEnter = function(env){
     this.environment = env.reactId;
     this.$el.addClass(env.reactId);
@@ -234,6 +251,60 @@ var Body = (function() {
   Body.prototype.onEnvironmentLeave = function(env){
     this.environment = "none";
     this.$el.removeClass(env.reactId);
+  };
+
+  Body.prototype.onTouchEnd = function(id, x, y, time) {
+    if (id !== this.touchId) return; // check if this is the same touch as when touch started
+
+    // console.log('end '+id);
+
+    // fling based on velocity
+    // console.log(this.velocityX, this.velocityY)
+    // console.log(this.el)
+    this.el.setVelocity(this.velocityX, this.velocityY);
+    this.touchId = false;
+  };
+
+  Body.prototype.onTouchMove = function(id, x, y, time) {
+    if (id !== this.touchId) return; // check if this is the same touch as when touch started
+
+    // move body based on delta from start
+    var dx = x - this.touchStartPosition.x;
+    var dy = y - this.touchStartPosition.y;
+    var elX = this.bodyStartPosition.x + dx;
+    var elY = this.bodyStartPosition.y + dy;
+
+    this.el.setPosition(elX, elY);
+
+    // calculate velocity
+    var deltaT = time - this.lastTouchTime;
+    if (deltaT > 0) {
+      dx = x - this.lastTouchPosition.x;
+      dy = y - this.lastTouchPosition.y;
+      this.velocityX = Phaser.Math.Clamp(dx / deltaT * 10, -100, 100);
+      this.velocityY = Phaser.Math.Clamp(dy / deltaT * 10, -100, 100);
+      // keep track of last time and position for velocity calculation
+      this.lastTouchTime = time;
+      this.lastTouchPosition = { x: x, y: y };
+    }
+
+  };
+
+  Body.prototype.onTouchStart = function(id, x, y, time) {
+    // console.log('start '+id);
+    // keep track of touch start time/position
+    this.touchId = id;
+    this.touchStartTime = time;
+    this.touchStartPosition = { x: x, y: y };
+    // keep track of body start position
+    var pos = this.matterBody.position;
+    this.bodyStartPosition = { x: pos.x, y: pos.y };
+    // this.el.setVelocity(0, 0); // finger will control velocity until released
+    // keep track of last time and position for velocity calculation
+    this.lastTouchTime = time;
+    this.lastTouchPosition = this.touchStartPosition;
+    this.velocityX = 0;
+    this.velocityY = 0;
   };
 
   Body.prototype.update = function(props){

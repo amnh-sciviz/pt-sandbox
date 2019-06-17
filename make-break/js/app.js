@@ -71,7 +71,7 @@ var MakeBreakApp = (function() {
       },
       dom: {
         createContainer: true,
-        behindCanvas: true
+        // behindCanvas: true
       },
       scene: {
         create: function(){ app.onGameCreate(this); },
@@ -96,13 +96,34 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.loadListeners = function(){
+    game.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
+      // console.log('collision start')
+      // console.log(bodyA, bodyB)
+      // console.log('a', bodyA.velocity)
+      // console.log('b', bodyB.velocity)
+      app.onCollision(bodyA, bodyB);
+    });
     game.matter.world.on('collisionend', function (event, bodyA, bodyB) {
       // console.log('collision end')
       app.onCollisionEnd(bodyA, bodyB);
     });
-    game.matter.world.on('collisionstart', function (event, bodyA, bodyB) {
-      // console.log('collision start')
-      app.onCollision(bodyA, bodyB);
+
+    $canvas.on('touchstart', function(e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      app.onTouchStart(e.changedTouches);
+    });
+
+    $canvas.on('touchmove', function(e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      app.onTouchMove(e.changedTouches);
+    });
+
+    $canvas.on('touchend', function(e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      app.onTouchEnd(e.changedTouches);
     });
 
     $('.add-element').on('click', function(e){
@@ -139,6 +160,10 @@ var MakeBreakApp = (function() {
       bodyA.onEnvironmentEnter(bodyB);
       return;
     }
+
+    // callback right before collision
+    bodyA.onCollision(bodyB);
+    bodyB.onCollision(bodyA);
 
     // check for reaction
     var newBody = bodyA.combineWith(bodyB, objectLookup);
@@ -218,9 +243,8 @@ var MakeBreakApp = (function() {
     });
 
     game.matter.add.mouseSpring();
-
     // We need to add extra pointers, as we only get 1 by default
-    game.input.addPointer(opt.inputsAllowed-1);
+    // game.input.addPointer(opt.inputsAllowed-1);
 
     app.loadListeners();
     app.loadGUI();
@@ -235,6 +259,36 @@ var MakeBreakApp = (function() {
     // console.log(physicalProperties)
     _.each(bodies, function(body, id){
       body.update(physicalProperties);
+    });
+  };
+
+  MakeBreakApp.prototype.onTouchEnd = function(touches){
+    _.each(touches, function(t){
+      if (t.target && t.target.tagName==="A") {
+        var elId = t.target.dataset.id;
+        // console.log(t)
+        bodies[elId].onTouchEnd(t.identifier, t.clientX, t.clientY, new Date().getTime());
+      }
+    });
+  };
+
+  MakeBreakApp.prototype.onTouchMove = function(touches){
+    _.each(touches, function(t){
+      if (t.target && t.target.tagName==="A") {
+        var elId = t.target.dataset.id;
+        // console.log(t)
+        bodies[elId].onTouchMove(t.identifier, t.clientX, t.clientY, new Date().getTime());
+      }
+    });
+  };
+
+  MakeBreakApp.prototype.onTouchStart = function(touches){
+    _.each(touches, function(t){
+      if (t.target && t.target.tagName==="A") {
+        var elId = t.target.dataset.id;
+        // console.log(t)
+        bodies[elId].onTouchStart(t.identifier, t.clientX, t.clientY, new Date().getTime());
+      }
     });
   };
 
