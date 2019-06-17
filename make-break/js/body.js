@@ -235,12 +235,13 @@ var Body = (function() {
     if (!this.isDragging() || bodyB.isDragging()) return false;
 
     // set velocity to dragged velocity
-    this.el.setVelocity(this.velocityX, this.velocityY);
+    // this.el.setVelocity(this.velocityX, this.velocityY);
 
     // apply the force from the drag event and release the touch
     // console.log("applying force", this.velocityX, this.velocityY)
-    bodyB.el.applyForce(this.matterBody.position, {x: this.velocityX, y: this.velocityY});
-    this.touchId = false;
+    // bodyB.el.applyForceFrom(this.matterBody.position, {x: this.velocityX, y: this.velocityY});
+    bodyB.el.setVelocity(this.velocityX, this.velocityY);
+    // this.touchId = false;
   };
 
   Body.prototype.onEnvironmentEnter = function(env){
@@ -287,7 +288,6 @@ var Body = (function() {
       this.lastTouchTime = time;
       this.lastTouchPosition = { x: x, y: y };
     }
-
   };
 
   Body.prototype.onTouchStart = function(id, x, y, time) {
