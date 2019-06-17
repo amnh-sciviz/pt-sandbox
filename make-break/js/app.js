@@ -126,6 +126,18 @@ var MakeBreakApp = (function() {
       app.onTouchEnd(e.changedTouches);
     });
 
+
+    $canvas.on('mousedown', '.body-object', function(e){
+      e.preventDefault();
+      app.onMouseStart(e);
+    });
+    $(document).on('mousemove', function(e){
+      app.onMouseMove(e);
+    });
+    $(document).on('mouseup', function(e){
+      app.onMouseEnd(e);
+    });
+
     $('.add-element').on('click', function(e){
       e.preventDefault();
       var velocity = {
@@ -262,12 +274,31 @@ var MakeBreakApp = (function() {
     });
   };
 
+  MakeBreakApp.prototype.onMouseEnd = function(e){
+    if (!this.currentElId) return;
+    bodies[this.currentElId].onTouchEnd(0, e.clientX, e.clientY, new Date().getTime());
+    this.currentElId = false;
+  };
+
+  MakeBreakApp.prototype.onMouseMove = function(e){
+    if (!this.currentElId) return;
+    bodies[this.currentElId].onTouchMove(0, e.clientX, e.clientY, new Date().getTime());
+  };
+
+  MakeBreakApp.prototype.onMouseStart = function(e){
+    var elId = e.target.dataset.id;
+    bodies[elId].onTouchStart(0, e.clientX, e.clientY, new Date().getTime());
+    this.currentElId = elId;
+  };
+
+
   MakeBreakApp.prototype.onTouchEnd = function(touches){
     _.each(touches, function(t){
       if (t.target && t.target.tagName==="A") {
         var elId = t.target.dataset.id;
+        var id = t.identifier !== undefined ? t.identifier: 0;
         // console.log(t)
-        bodies[elId].onTouchEnd(t.identifier, t.clientX, t.clientY, new Date().getTime());
+        bodies[elId].onTouchEnd(id, t.clientX, t.clientY, new Date().getTime());
       }
     });
   };
@@ -276,8 +307,9 @@ var MakeBreakApp = (function() {
     _.each(touches, function(t){
       if (t.target && t.target.tagName==="A") {
         var elId = t.target.dataset.id;
+        var id = t.identifier !== undefined ? t.identifier: 0;
         // console.log(t)
-        bodies[elId].onTouchMove(t.identifier, t.clientX, t.clientY, new Date().getTime());
+        bodies[elId].onTouchMove(id, t.clientX, t.clientY, new Date().getTime());
       }
     });
   };
@@ -286,8 +318,9 @@ var MakeBreakApp = (function() {
     _.each(touches, function(t){
       if (t.target && t.target.tagName==="A") {
         var elId = t.target.dataset.id;
+        var id = t.identifier !== undefined ? t.identifier: 0;
         // console.log(t)
-        bodies[elId].onTouchStart(t.identifier, t.clientX, t.clientY, new Date().getTime());
+        bodies[elId].onTouchStart(id, t.clientX, t.clientY, new Date().getTime());
       }
     });
   };
