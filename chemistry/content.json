@@ -1,0 +1,62 @@
+{
+  "elements": {
+    "O": {
+      "name": "Oxygen",
+      "group": "NonMetal",
+      "atomicRadius": 0.65,
+      "density": 0.00143,
+      "valenceElectrons": 6,
+      "electronegativity": 3.44
+    },
+    "Si": {
+      "name": "Silicon",
+      "group": "SemiMetal",
+      "atomicRadius": 1.5,
+      "density": 2.33,
+      "valenceElectrons": 4,
+      "electronegativity": 1.9
+    },
+    "Na": {
+      "name": "Sodium",
+      "group": "Metal",
+      "atomicRadius": 2.2,
+      "density": 0.971,
+      "valenceElectrons": 1,
+      "electronegativity": 0.93
+    },
+    "Cl": {
+      "name": "Chlorine",
+      "group": "Halogen",
+      "atomicRadius": 0.97,
+      "density": 0.00321,
+      "valenceElectrons": 7,
+      "electronegativity": 3.16
+    }
+  },
+  "groups": {
+    "Halogen": {
+      "color": "#c6838c",
+      "name": "Halogens"
+    },
+    "Metal": {
+      "color": "#306090",
+      "name": "Metals"
+    },
+    "NobleGas": {
+      "color": "#807e96",
+      "name": "Noble Gases"
+    },
+    "NonMetal": {
+      "color": "#d3aa58",
+      "name": "Non-metals"
+    },
+    "SemiMetal": {
+      "color": "#7a9b8a",
+      "name": "Semi-metals"
+    },
+    "Synthetic": {
+      "color": "#292929",
+      "name": "Synthetic elements"
+    }
+  }
+}
