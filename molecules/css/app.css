@@ -1,0 +1,275 @@
+:root {
+  --mwidth: 60px;
+  --mheight: 60px;
+  --ewidth: 10px;
+  --eoffset: 7.5px;
+  --color-metal: #306090;
+  --color-semi-metal: #7a9b8a;
+  --color-non-metal: #d3aa58;
+  --color-noble-gas: #807e96;
+  --color-halogen: #c5848a;
+  --color-medium: #444;
+  --color-light: #aaa;
+  --color-positive: #156e14;
+  --color-negative: #6e1414;
+}
+
+.canvas {
+  background: black;
+  color: white;
+}
+
+.canvas * {
+  touch-action: none;
+  user-select: none;
+}
+
+.canvas canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+.canvas > div {
+  z-index: 1;
+}
+
+.dg.ac {
+  z-index: 100 !important;
+}
+
+.hit-area {
+  display: block;
+  text-decoration: none;
+  color: black;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.atom {
+  width: var(--mwidth);
+  height: var(--mheight);
+  position: relative;
+}
+.shell,
+.nucleus,
+.electrons,
+.e,
+.bond {
+  position: absolute;
+}
+.shell {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  border: 2px solid var(--color-medium);
+  background: black;
+}
+.shell.positive {
+  border-color: var(--color-positive);
+}
+.shell.negative {
+  border-color: var(--color-negative);
+}
+.nucleus {
+  width: calc(var(--mwidth)*0.75);
+  height: calc(var(--mheight)*0.75);
+  line-height: calc(var(--mheight)*0.75);
+  top: calc(var(--mheight)*0.125);
+  left: calc(var(--mwidth)*0.125);
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-metal);
+  transform-origin: 50% 50%;
+}
+.electrons {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform-origin: 50% 50%;
+}
+.e {
+  width: var(--ewidth);
+  height: var(--ewidth);
+  background: var(--color-light);
+  border-radius: 50%;
+}
+.e:first-child { top: 0; left: 50%; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*-1.5); }
+.e:nth-child(2) { top: 0; left: 50%; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*0.5); }
+.e:nth-child(3) { bottom: 0; left: 50%; margin-bottom: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*-1.5); }
+.e:nth-child(4) { bottom: 0; left: 50%; margin-bottom: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*0.5); }
+.e:nth-child(5) { top: 50%; left: 0; margin-top: calc(var(--eoffset)*-1.5); margin-left: calc(var(--ewidth)*-0.5); }
+.e:nth-child(6) { top: 50%; left: 0; margin-top: calc(var(--eoffset)*0.5); margin-left: calc(var(--ewidth)*-0.5); }
+.e:nth-child(7) { top: 50%; right: 0; margin-top: calc(var(--eoffset)*-1.5); margin-right: calc(var(--ewidth)*-0.5); }
+.e:nth-child(8) { top: 50%; right: 0; margin-top: calc(var(--eoffset)*0.5); margin-right: calc(var(--ewidth)*-0.5); }
+.e.lose {
+  animation: pulse 0.5s infinite;
+}
+.e.gain {
+  animation: pulse 0.5s infinite;
+  box-sizing: border-box;
+  background: black;
+  border: 1px solid var(--color-light);
+}
+.e.share {
+  animation: pulse 2s infinite;
+}
+.e.shared {
+  background: white;
+}
+.e.lossed {
+  background: black;
+  border: 1px solid var(--color-medium);
+}
+.e.gained {
+  background: white;
+}
+.bond {
+  width: 50%;
+  height: calc(var(--ewidth)*0.5);
+  background: white;
+  top: 50%;
+  left: 25%;
+  margin-top: calc(var(--eoffset)*-1);
+}
+
+.molecule {
+  width: calc(var(--mwidth)*2);
+  height: calc(var(--mheight));
+  position: relative;
+  animation: bounceIn 1s;
+}
+.molecule .atom {
+  position: absolute;
+  top: 0;
+}
+.molecule .atom:first-child {
+  left: -2px;
+}
+.molecule .atom:last-child {
+  right: -2px;
+}
+.molecule.covalent {
+  width: calc(var(--mwidth)*2.33);
+}
+
+.O .nucleus {
+  transform: scale3d(0.6, 0.6, 1);
+}
+.Cl .nucleus {
+  transform: scale3d(0.75, 0.75, 1);
+}
+.SiO .Si .electrons {
+  transform: rotateZ(90deg);
+}
+.NaCl .Na .electrons {
+  transform: rotateZ(-45deg);
+}
+.NaCl .Cl .electrons {
+  transform: rotateZ(45deg);
+}
+
+.templates {
+  display: none;
+}
+
+.toolbar {
+  width: 100%;
+  height: 0;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  z-index: 50;
+}
+.toolbar .button {
+  display: inline-block;
+  margin-right: 60px;
+  padding: 1rem 2rem;
+  color: black;
+  text-decoration: none;
+  position: relative;
+  transform-origin: top center;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  background: var(--color-metal);
+}
+.toolbar .button:hover {
+  transform: scale3d(1.04, 1.04, 1.04);
+}
+.toolbar .button:last-child {
+  margin-right: 0;
+}
+
+.semi-metal .nucleus,
+.button.semi-metal {
+  background: var(--color-semi-metal);
+}
+.non-metal .nucleus,
+.button.non-metal {
+  background: var(--color-non-metal);
+}
+.noble-gas .nucleus,
+.button.noble-gas {
+  background: var(--color-noble-gas);
+}
+.halogen .nucleus,
+.button.halogen {
+  background: var(--color-halogen);
+}
+
+@keyframes bounceIn {
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  20% {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  40% {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+  80% {
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes pulse {
+  from, to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+
+  50% {
+    -webkit-transform: scale3d(1.05, 1.05, 1.05);
+    transform: scale3d(1.1, 1.1, 1.1);
+    opacity: 0.5;
+  }
+}

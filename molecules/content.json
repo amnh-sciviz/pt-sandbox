@@ -1,0 +1,71 @@
+{
+  "objects": [
+    {
+      "id": "O",
+      "label": "Oxygen",
+      "type": "element",
+      "group": "non-metal",
+      "physicalProperties": {
+        "density": 0.001
+      },
+      "reactsWith": {
+        "Si": "SiO"
+      },
+      "maxCount": 12
+    },{
+      "id": "Si",
+      "label": "Silicon",
+      "type": "element",
+      "group": "semi-metal",
+      "physicalProperties": {
+        "density": 0.001
+      },
+      "reactsWith": {
+        "O": "SiO"
+      },
+      "maxCount": 12
+    },{
+      "id": "Na",
+      "label": "Sodium",
+      "type": "element",
+      "group": "metal",
+      "physicalProperties": {
+        "density": 0.001
+      },
+      "reactsWith": {
+        "Cl": "NaCl"
+      },
+      "maxCount": 12
+    },{
+      "id": "Cl",
+      "label": "Chlorine",
+      "type": "element",
+      "group": "halogen",
+      "physicalProperties": {
+        "density": 0.001
+      },
+      "reactsWith": {
+        "Na": "NaCl"
+      },
+      "maxCount": 12
+    },{
+      "id": "SiO",
+      "label": "Silicon oxide",
+      "type": "compound",
+      "shape": "rectangle",
+      "weight": 0.1,
+      "physicalProperties": {
+        "density": 0.1
+      }
+    },{
+      "id": "NaCl",
+      "label": "Sodium Chloride",
+      "type": "compound",
+      "shape": "rectangle",
+      "weight": 0.1,
+      "physicalProperties": {
+        "density": 0.1
+      }
+    }
+  ]
+}
