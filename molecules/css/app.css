@@ -137,9 +137,9 @@
   width: 50%;
   height: calc(var(--ewidth)*0.5);
   background: white;
-  top: 50%;
+  top: 52%;
   left: 25%;
-  margin-top: calc(var(--eoffset)*-1);
+  margin-top: calc(var(--ewidth)*-0.25);
 }
 
 .molecule {
@@ -161,6 +161,26 @@
 .molecule.covalent {
   width: calc(var(--mwidth)*2.33);
 }
+.molecule2 {
+  width: calc(var(--mwidth)*3);
+}
+.molecule2.covalent {
+  width: calc(var(--mwidth)*3.66);
+}
+.molecule2 .atom:nth-child(2) {
+  margin-left: calc(var(--mwidth)*-0.5);
+  left: 50%;
+}
+.molecule2 .bond {
+  width: 33%;
+}
+.molecule2 .bond:first-child {
+  left: 16.67%;
+}
+.molecule2 .bond:nth-child(2) {
+  left: auto;
+  right: 16.67%;
+}
 
 .O .nucleus {
   transform: scale3d(0.6, 0.6, 1);
@@ -168,7 +188,8 @@
 .Cl .nucleus {
   transform: scale3d(0.75, 0.75, 1);
 }
-.SiO .Si .electrons {
+.SiO .Si .electrons,
+.SiO2 .Si .electrons {
   transform: rotateZ(90deg);
 }
 .NaCl .Na .electrons {
@@ -177,6 +198,20 @@
 .NaCl .Cl .electrons {
   transform: rotateZ(45deg);
 }
+
+.SiO .O .e:nth-child(5) { margin-top: calc(var(--ewidth)*-0.5); }
+.SiO .O .e:nth-child(6) { left: auto; right: 0; margin-top: calc(var(--ewidth)*-0.5); margin-left: auto; margin-right: calc(var(--ewidth)*-0.5); }
+.SiO .Si .e:first-child { margin-left: calc(var(--ewidth)*-0.5); }
+.SiO .Si .e:nth-child(2) { top: 50%; left: 0; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--ewidth)*-0.5); }
+
+.SiO2 .O:first-child .e:nth-child(5) { right: 0; left: auto; margin-left: auto; margin-right: calc(var(--ewidth)*-0.5); margin-top: calc(var(--ewidth)*-0.5); }
+.SiO2 .O:first-child .e:nth-child(6) { margin-top: calc(var(--ewidth)*-0.5); }
+.SiO2 .O:last-child .e:nth-child(5) { margin-top: calc(var(--ewidth)*-0.5); }
+.SiO2 .O:last-child .e:nth-child(6) { margin-top: calc(var(--ewidth)*-0.5); left: auto; right: 0; margin-left: auto; margin-right: calc(var(--ewidth)*-0.5); }
+.SiO2 .Si .e:first-child { margin-left: calc(var(--ewidth)*-0.5); }
+.SiO2 .Si .e:nth-child(2) { top: 50%; left: 0; margin-left: calc(var(--ewidth)*-0.5); margin-top: calc(var(--ewidth)*-0.5); }
+.SiO2 .Si .e:nth-child(3) { margin-left: calc(var(--ewidth)*-0.5); }
+.SiO2 .Si .e:nth-child(4) { top: 50%; right: 0; left: auto; margin-top: calc(var(--ewidth)*-0.5); margin-right: calc(var(--ewidth)*-0.5); margin-left: auto; }
 
 .templates {
   display: none;
