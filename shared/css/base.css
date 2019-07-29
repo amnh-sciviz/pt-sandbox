@@ -18,7 +18,7 @@ a {
 }
 
 .container {
-  max-width: 38rem;
+  max-width: 900px;
   padding: 2rem;
   margin: auto;
 }

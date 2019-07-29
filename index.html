@@ -9,6 +9,24 @@
 
   <link rel="stylesheet" href="shared/css/vendor/normalize.css">
   <link rel="stylesheet" href="shared/css/base.css">
+  <style type="text/css">
+  body {
+    font-size: 18px;
+  }
+  a {
+    font-weight: bold;
+  }
+  li {
+    margin-bottom: 1rem;
+  }
+  ol li ol {
+    list-style-type: lower-alpha;
+    margin-top: 1rem;
+  }
+  li em {
+    color: #444;
+  }
+  </style>
 
 </head>
 
@@ -21,15 +39,34 @@
     </p>
 
     <h2>Interaction tests</h2>
+
+    <p>These are prototypes that demonstrate a specific concept, idea, and or interaction. These are not necessarily fully-realized experiences. These are listed chronologically starting with most recent.</p>
+
     <ol>
-      <li><a href="physics/">Physics interaction</a> - Demonstrate physics-based interaction of multiple objects</li>
-      <li><a href="make-break/">Make or break</a> - Combine elements into minerals, break apart minerals into elements</li>
-      <li><a href="molecules/">Basic molecule interaction</a> - Demonstration of simply combining atoms into molecules, highlighting the electrons</li>
-      <li><a href="table/">Periodic Table</a> - Interact with the periodic table</li>
+      <li>
+        <a href="molecules/">Basic molecule interaction</a> <em>(2019-07-24)</em>- Demonstration of simply combining atoms into molecules, highlighting the electrons. Feedback and takeaways:
+        <ol>
+          <li>Somehow visualize the steps of the bonding process more slowly (e.g. by "instant-replay")</li>
+          <li>Focus on chemical formulas (not structure); somehow show progress as you fill out a chemical formula (e.g. SO<sub>2</sub>)</li>
+          <li>Try out adding layers of content that can be accessed by double-tapping</li>
+        </ol>
+      </li>
+      <li>
+        <a href="make-break/">Make or break</a> <em>(2019-06-18)</em> - Combine elements into minerals, break apart minerals into elements. Feedback and takeaways:
+        <ol>
+          <li>Would like to represent electrons and chemical bonds more accurately</li>
+          <li>Using different environment contexts may not be in the scope of this experience.</li>
+        </ol>
+      </li>
+      <li><a href="table/">Periodic Table</a> <em>(2019-06-18)</em> - Interact with the periodic table</li>
     </ol>
 
     <h2>Utilities</h2>
+
+    <p>Used internally for testing hardware and software</p>
+
     <ol>
+      <li><a href="physics/">Physics test</a> - Demonstrate physics-based interaction of multiple objects</li>
       <li><a href="tuio/">TUIO/Multi-touch test</a> - A basic utility for testing/debugging multi-touch functionality on a TUIO device</li>
       <li><a href="multitouch/">Multi-touch test</a> - A basic utility for testing/debugging multi-touch functionality on a touch-enabled device</li>
     </ol>
