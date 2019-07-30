@@ -1,0 +1,339 @@
+:root {
+  --mwidth: 60px;
+  --mheight: 60px;
+  --ewidth: 10px;
+  --eoffset: 7.5px;
+  --connector-length: 20px;
+  --connector-width: 2px;
+  --color-metal: #306090;
+  --color-semi-metal: #7a9b8a;
+  --color-non-metal: #d3aa58;
+  --color-noble-gas: #807e96;
+  --color-halogen: #c5848a;
+  --color-medium: #444;
+  --color-light: #aaa;
+  --color-positive: #156e14;
+  --color-negative: #6e1414;
+}
+
+.canvas {
+  background: black;
+  color: white;
+}
+
+.canvas * {
+  touch-action: none;
+  user-select: none;
+}
+
+.canvas canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+.canvas > div {
+  z-index: 1;
+}
+
+.dg.ac {
+  z-index: 100 !important;
+}
+
+.hit-area {
+  display: block;
+  text-decoration: none;
+  color: black;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.atom {
+  width: var(--mwidth);
+  height: var(--mheight);
+  position: relative;
+}
+.shell,
+.nucleus,
+.electrons,
+.e,
+.bond {
+  position: absolute;
+}
+.shell {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  border: 2px solid var(--color-medium);
+  background: black;
+}
+/* .shell.positive {
+  border-color: var(--color-positive);
+}
+.shell.negative {
+  border-color: var(--color-negative);
+} */
+.nucleus {
+  width: calc(var(--mwidth)*0.75);
+  height: calc(var(--mheight)*0.75);
+  line-height: calc(var(--mheight)*0.75);
+  top: calc(var(--mheight)*0.125);
+  left: calc(var(--mwidth)*0.125);
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-metal);
+  transform-origin: 50% 50%;
+}
+.electrons {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform-origin: 50% 50%;
+}
+.e {
+  width: var(--ewidth);
+  height: var(--ewidth);
+  background: var(--color-light);
+  border-radius: 50%;
+  z-index: 100;
+  transform-origin: center center;
+  box-sizing: border-box;
+  border: 1px solid var(--color-light);
+}
+.e.top-left, .e.tl { top: 0; left: 50%; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*-1.5); }
+.e.top-middle, .e.tm { top: 0; left: 50%; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--ewidth)*-0.5); }
+.e.top-right, .e.tr { top: 0; left: 50%; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*0.5); }
+.e.bottom-left, .e.bl { bottom: 0; left: 50%; margin-bottom: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*-1.5); }
+.e.bottom-middle, .e.bm { bottom: 0; left: 50%; margin-bottom: calc(var(--ewidth)*-0.5); margin-left: calc(var(--ewidth)*-0.5); }
+.e.bottom-right, .e.br { bottom: 0; left: 50%; margin-bottom: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*0.5); }
+.e.left-top, .e.lt { top: 50%; left: 0; margin-top: calc(var(--eoffset)*-1.5); margin-left: calc(var(--ewidth)*-0.5); }
+.e.left-middle, .e.lm { top: 50%; left: 0; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--ewidth)*-0.5); }
+.e.left-bottom, .e.lb { top: 50%; left: 0; margin-top: calc(var(--eoffset)*0.5); margin-left: calc(var(--ewidth)*-0.5); }
+.e.right-top, .e.rt { top: 50%; right: 0; margin-top: calc(var(--eoffset)*-1.5); margin-right: calc(var(--ewidth)*-0.5); }
+.e.right-middle, .e.rm { top: 50%; right: 0; margin-top: calc(var(--ewidth)*-0.5); margin-right: calc(var(--ewidth)*-0.5); }
+.e.right-bottom, .e.rb { top: 50%; right: 0; margin-top: calc(var(--eoffset)*0.5); margin-right: calc(var(--ewidth)*-0.5); }
+.e.lt, .e.lm, .e.lb {
+  transform: rotateZ(-90deg);
+}
+.e.rt, .e.rm, .e.rb {
+  transform: rotateZ(90deg);
+}
+.e.bl, .e.bm, .e.br {
+  transform: rotateZ(180deg);
+}
+.e.lose {
+  animation: blink 0.5s infinite;
+}
+.e.gain {
+  animation: blink 0.5s infinite;
+  background: black;
+}
+.e.share {
+  animation: blink 2s infinite;
+}
+.e.shared {
+  background: white;
+}
+.e.lossed {
+  background: black;
+  border-color: var(--color-medium);
+}
+.e.gained {
+  background: white;
+  border-color: white;
+}
+
+.e .connector {
+  width: var(--connector-width);
+  height: var(--connector-length);
+  background: var(--color-medium);
+  position: absolute;
+  bottom: calc(var(--ewidth) - 1px);
+  left: 50%;
+  margin-left: calc(var(--connector-width)*-0.5);
+}
+
+/* arrow head */
+.e.lose .connector:after,
+.e.gain .connector:after {
+  content: " ";
+  border: solid var(--color-medium);
+  border-width: 0 2px 2px 0;
+  padding: 2px;
+  transform: rotateZ(-135deg);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -3px;
+}
+.e.gain .connector:after {
+  transform: rotateZ(45deg);
+  bottom: 2px;
+  top: auto;
+}
+
+.e.lose.share .connector:after,
+.e.gain.share .connector:after {
+  display: none;
+}
+
+.molecule {
+  width: calc(var(--mwidth)*2);
+  height: calc(var(--mheight));
+  position: relative;
+  animation: bounceIn 1s;
+}
+.molecule .atom {
+  position: absolute;
+  top: 0;
+}
+.molecule .atom:first-child {
+  left: -2px;
+}
+.molecule .atom:last-child {
+  right: -2px;
+}
+.molecule.covalent .atom:first-child {
+  left: 0;
+}
+.molecule.covalent .atom:last-child {
+  right: 0;
+}
+.molecule2 {
+  width: calc(var(--mwidth)*3);
+}
+.molecule2 .atom:nth-child(2) {
+  margin-left: calc(var(--mwidth)*-0.5);
+  left: 50%;
+}
+
+.O .nucleus {
+  transform: scale3d(0.6, 0.6, 1);
+}
+.Cl .nucleus {
+  transform: scale3d(0.75, 0.75, 1);
+}
+.SiO2 .O:last-child .electrons {
+  transform: rotateZ(180deg);
+}
+.NaCl .Na .electrons {
+  transform: rotateZ(-45deg);
+}
+.NaCl .Cl .electrons {
+  transform: rotateZ(45deg);
+}
+
+.templates {
+  display: none;
+}
+
+.toolbar {
+  width: 100%;
+  height: 0;
+  overflow: visible;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-align: center;
+  z-index: 50;
+}
+.toolbar .button {
+  display: inline-block;
+  margin-right: 60px;
+  padding: 1rem 2rem;
+  color: black;
+  text-decoration: none;
+  position: relative;
+  transform-origin: top center;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+  background: var(--color-metal);
+}
+.toolbar .button:hover {
+  transform: scale3d(1.04, 1.04, 1.04);
+}
+.toolbar .button:last-child {
+  margin-right: 0;
+}
+
+.semi-metal .nucleus,
+.button.semi-metal {
+  background: var(--color-semi-metal);
+}
+.non-metal .nucleus,
+.button.non-metal {
+  background: var(--color-non-metal);
+}
+.noble-gas .nucleus,
+.button.noble-gas {
+  background: var(--color-noble-gas);
+}
+.halogen .nucleus,
+.button.halogen {
+  background: var(--color-halogen);
+}
+
+@keyframes bounceIn {
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  20% {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  40% {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
+  80% {
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes blink {
+  from, to {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse {
+  from, to {
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+    opacity: 1;
+  }
+
+  50% {
+    -webkit-transform: scale3d(1.05, 1.05, 1.05);
+    transform: scale3d(1.1, 1.1, 1.1);
+    opacity: 0.5;
+  }
+}
