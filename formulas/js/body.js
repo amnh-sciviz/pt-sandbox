@@ -34,6 +34,7 @@ var Body = (function() {
     this.opt = opt;
 
     this.create();
+    this.loadListeners();
   }
 
   Body.prototype.breakApart = function(objects){
@@ -188,6 +189,7 @@ var Body = (function() {
 
     el.body.label = id;
     this.$el = $el;
+    this.$hitArea = $wrapper.find(".hit-area");
     this.el = el;
 
     this.matterBody = el.body;
@@ -202,6 +204,8 @@ var Body = (function() {
   };
 
   Body.prototype.destroyBody = function(){
+    this.mc.off("panstart panmove panend tap pinchin pinchout");
+    this.mc.destroy();
     this.el.destroy();
   };
 
@@ -215,6 +219,37 @@ var Body = (function() {
 
   Body.prototype.isDragging = function(){
     return this.touchId !== undefined && this.touchId !== false;
+  };
+
+  Body.prototype.loadListeners = function(){
+    var _this = this;
+    var el = this.$hitArea[0];
+    var mc = new Hammer(el);
+
+    mc.on("panstart", function(e){
+      _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
+    });
+
+    mc.on("panmove", function(e){
+      _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
+    });
+
+    mc.on("panend", function(e){
+      _this.onDragEnd(e.center.x, e.center.y, new Date().getTime());
+    });
+    mc.on("pinchin", function(e){
+      _this.onPinchIn();
+    });
+
+    mc.on("pinchout", function(e){
+      _this.onPinchOut();
+    });
+
+    mc.on("tap", function(e){
+      _this.onTap();
+    });
+
+    this.mc = mc;
   };
 
   Body.prototype.onCollision = function(bodyB){
@@ -241,10 +276,8 @@ var Body = (function() {
     this.$el.removeClass(env.reactId);
   };
 
-  Body.prototype.onTouchEnd = function(id, x, y, time) {
-    if (id !== this.touchId) return; // check if this is the same touch as when touch started
-
-    // console.log('end '+id);
+  Body.prototype.onDragEnd = function(x, y, time) {
+    // console.log('end '+this.id+' '+x+', '+y);
 
     // fling based on velocity
     // console.log(this.velocityX, this.velocityY)
@@ -253,9 +286,7 @@ var Body = (function() {
     this.touchId = false;
   };
 
-  Body.prototype.onTouchMove = function(id, x, y, time) {
-    if (id !== this.touchId) return; // check if this is the same touch as when touch started
-
+  Body.prototype.onDragMove = function(x, y, time) {
     // move body based on delta from start
     var dx = x - this.touchStartPosition.x;
     var dy = y - this.touchStartPosition.y;
@@ -265,22 +296,21 @@ var Body = (function() {
     this.el.setPosition(elX, elY);
 
     // calculate velocity
-    var deltaT = time - this.lastTouchTime;
+    var deltaT = time - this.lastDragTime;
     if (deltaT > 0) {
-      dx = x - this.lastTouchPosition.x;
-      dy = y - this.lastTouchPosition.y;
+      dx = x - this.lastDragPosition.x;
+      dy = y - this.lastDragPosition.y;
       this.velocityX = Phaser.Math.Clamp(dx / deltaT * 10, -100, 100);
       this.velocityY = Phaser.Math.Clamp(dy / deltaT * 10, -100, 100);
       // keep track of last time and position for velocity calculation
-      this.lastTouchTime = time;
-      this.lastTouchPosition = { x: x, y: y };
+      this.lastDragTime = time;
+      this.lastDragPosition = { x: x, y: y };
     }
   };
 
-  Body.prototype.onTouchStart = function(id, x, y, time) {
-    // console.log('start '+id);
+  Body.prototype.onDragStart = function(x, y, time) {
+    // console.log('start '+this.id+' '+x+', '+y);
     // keep track of touch start time/position
-    this.touchId = id;
     this.touchStartTime = time;
     this.touchStartPosition = { x: x, y: y };
     // keep track of body start position
@@ -288,10 +318,22 @@ var Body = (function() {
     this.bodyStartPosition = { x: pos.x, y: pos.y };
     // this.el.setVelocity(0, 0); // finger will control velocity until released
     // keep track of last time and position for velocity calculation
-    this.lastTouchTime = time;
-    this.lastTouchPosition = this.touchStartPosition;
+    this.lastDragTime = time;
+    this.lastDragPosition = this.touchStartPosition;
     this.velocityX = 0;
     this.velocityY = 0;
+  };
+
+  Body.prototype.onPinchIn = function(){
+    console.log("Pinch in "+this.id);
+  };
+
+  Body.prototype.onPinchOut = function(){
+    console.log("Pinch out "+this.id);
+  };
+
+  Body.prototype.onTap = function(){
+    console.log("Tap "+this.id);
   };
 
   Body.prototype.update = function(props){
