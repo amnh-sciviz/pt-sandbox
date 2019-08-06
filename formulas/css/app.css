@@ -131,14 +131,14 @@
   transform: rotateZ(180deg);
 }
 .e.lose {
-  animation: blink 0.5s infinite;
+  /* animation: blink 0.5s infinite; */
 }
 .e.gain {
-  animation: blink 0.5s infinite;
+  /* animation: blink 0.5s infinite; */
   background: black;
 }
 .e.share {
-  animation: blink 2s infinite;
+  /* animation: blink 2s infinite; */
 }
 .e.shared {
   background: white;
@@ -160,6 +160,10 @@
   bottom: calc(var(--ewidth) - 1px);
   left: 50%;
   margin-left: calc(var(--connector-width)*-0.5);
+  animation: moveUp 2s infinite;
+}
+.e.gain .connector {
+  animation-name: moveDown;
 }
 
 /* arrow head */
@@ -179,11 +183,6 @@
   transform: rotateZ(45deg);
   bottom: 2px;
   top: auto;
-}
-
-.e.lose.share .connector:after,
-.e.gain.share .connector:after {
-  display: none;
 }
 
 .molecule {
@@ -326,14 +325,40 @@
 
 @keyframes pulse {
   from, to {
-    -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);
     opacity: 1;
   }
 
   50% {
-    -webkit-transform: scale3d(1.05, 1.05, 1.05);
-    transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.05, 1.05, 1.05);
     opacity: 0.5;
+  }
+}
+
+@keyframes moveUp {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes moveDown {
+  from {
+    transform: translate3d(0, -50%, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
   }
 }
