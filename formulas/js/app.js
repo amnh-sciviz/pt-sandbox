@@ -3,7 +3,7 @@
 var MakeBreakApp = (function() {
 
   var app, opt, $canvas, w, h, phaserGame, game, gui;
-  var bodies, objects, objectLookup, physicalProperties, $domContainer;
+  var objects, objectLookup, physicalProperties, $domContainer;
   var $toolbar;
 
   function MakeBreakApp(config) {
@@ -49,10 +49,11 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.addObject = function(props) {
+    var _this = this;
     var obj = _.clone(props);
     if (obj.physicalProperties) obj.physicalProperties = _.extend({}, physicalProperties, obj.physicalProperties);
-    var body = new Body(_.extend({}, obj, {game: game, $container: $domContainer}));
-    bodies[body.id] = body;
+    var body = new Body(_.extend({}, obj, {app: _this, game: game, $container: $domContainer}));
+    this.bodies[body.id] = body;
   };
 
   MakeBreakApp.prototype.loadGame = function(){
@@ -126,10 +127,11 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.onCollision = function(matterBodyA, matterBodyB) {
+    var _this = this;
     var idA = matterBodyA.label;
     var idB = matterBodyB.label;
-    var bodyA = bodies[idA];
-    var bodyB = bodies[idB];
+    var bodyA = this.bodies[idA];
+    var bodyB = this.bodies[idB];
 
     if (bodyA === undefined || bodyB === undefined) return;
 
@@ -151,10 +153,9 @@ var MakeBreakApp = (function() {
     var newBody = bodyA.combineWith(bodyB, objectLookup);
     if (newBody) {
       // delete collided bodies
-      delete bodies[idA];
-      delete bodies[idB];
+      this.bodies = _.omit(this.bodies, idA, idB);
       // add new body
-      bodies[newBody.id] = newBody;
+      this.bodies[newBody.id] = newBody;
       this.makeSound && this.makeSound.playPercent(1.0-newBody.getWeight());
       return;
     }
@@ -162,11 +163,10 @@ var MakeBreakApp = (function() {
     var newBodies = bodyA.breakWith(bodyB, objectLookup);
     if (newBodies && newBodies.length) {
       // delete collided bodies
-      delete bodies[idA];
-      delete bodies[idB];
+      this.bodies = _.omit(this.bodies, idA, idB);
       // add new bodies
       _.each(newBodies, function(body){
-        bodies[body.id] = body;
+        _this.bodies[body.id] = body;
       });
       this.breakSound && this.breakSound.playSprite("break");
       return;
@@ -179,8 +179,8 @@ var MakeBreakApp = (function() {
   MakeBreakApp.prototype.onCollisionEnd = function(matterBodyA, matterBodyB){
     var idA = matterBodyA.label;
     var idB = matterBodyB.label;
-    var bodyA = bodies[idA];
-    var bodyB = bodies[idB];
+    var bodyA = this.bodies[idA];
+    var bodyB = this.bodies[idB];
 
     if (bodyA === undefined || bodyB === undefined) return;
 
@@ -201,7 +201,7 @@ var MakeBreakApp = (function() {
 
     $domContainer = $canvas.children('div').first();
     if (!$domContainer.length) console.log("Could not find DOM container!");
-    bodies = {};
+    this.bodies = {};
     _.each(objects, function(props){
       var count = props.count;
       if (count && count > 0) {
@@ -239,7 +239,7 @@ var MakeBreakApp = (function() {
 
   MakeBreakApp.prototype.onGameUpdate = function(){
     // console.log(physicalProperties)
-    _.each(bodies, function(body, id){
+    _.each(this.bodies, function(body, id){
       body.update(physicalProperties);
     });
   };

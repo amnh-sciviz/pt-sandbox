@@ -12,7 +12,11 @@
         "Si": "SiO",
         "SiO": "SiO2"
       },
-      "maxCount": 12
+      "maxCount": 12,
+      "connectAngles": {
+        "Si": 180,
+        "SiO": 180
+      }
     },{
       "id": "Si",
       "label": "Silicon",
@@ -24,7 +28,10 @@
       "reactsWith": {
         "O": "SiO"
       },
-      "maxCount": 12
+      "maxCount": 12,
+      "connectAngles": {
+        "O": 0
+      }
     },{
       "id": "Na",
       "label": "Sodium",
@@ -36,7 +43,10 @@
       "reactsWith": {
         "Cl": "NaCl"
       },
-      "maxCount": 12
+      "maxCount": 12,
+      "connectAngles": {
+        "Cl": 270
+      }
     },{
       "id": "Cl",
       "label": "Chlorine",
@@ -48,7 +58,10 @@
       "reactsWith": {
         "Na": "NaCl"
       },
-      "maxCount": 12
+      "maxCount": 12,
+      "connectAngles": {
+        "Na": 175
+      }
     },{
       "id": "SiO",
       "label": "Silicon oxide",
@@ -60,6 +73,9 @@
       },
       "physicalProperties": {
         "density": 0.1
+      },
+      "connectAngles": {
+        "O": 180
       }
     },{
       "id": "SiO2",

@@ -21,6 +21,7 @@ var Body = (function() {
     var opt = _.extend({}, defaults, config);
 
     // globals
+    this.parent = opt.app;
     game = opt.game;
     physics = game.matter;
     $container = opt.$container;
@@ -32,10 +33,49 @@ var Body = (function() {
     this.bodyType = opt.type;
     this.environment = "none";
     this.opt = opt;
+    this.isAttracting = false;
+    this.isBeingAttractedTo = false;
+    this.connectAngles = this.opt.connectAngles ? _.mapObject(this.opt.connectAngles, function(deg, key){ return Phaser.Math.DegToRad(deg); }) : {};
+    this.attractAngleStep = Phaser.Math.DegToRad(this.opt.attractAngleStep);
+    this.shellRotation = 0;
 
     this.create();
     this.loadListeners();
   }
+
+  Body.prototype.attractBody = function(body){
+    var angle = this.el.body.angle;
+    var angleBetween = Phaser.Math.Angle.Between(body.el.x, body.el.y, this.el.x, this.el.y);
+    var connectAngle = this.connectAngles[body.reactId];
+    // console.log('-----')
+    // console.log('angle: '+Phaser.Math.RadToDeg(angle));
+    // console.log('angleBetween: '+Phaser.Math.RadToDeg(Phaser.Math.Angle.Normalize(angleBetween)));
+    // console.log('connectAngle: '+Phaser.Math.RadToDeg(Phaser.Math.Angle.Normalize(connectAngle)));
+    var targetRotateAngle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Normalize(angleBetween + connectAngle - angle));
+    this.$outerShell.css('transform', 'rotateZ('+targetRotateAngle+'deg)');
+  };
+
+  Body.prototype.attractNeighbors = function(){
+    var _this = this;
+    var validNeighbors = _.values(this.parent.bodies);
+
+    validNeighbors = _.filter(validNeighbors, function(body){
+      // must not be self, cannot be attracting another body, must be compatible
+      return (body.id !== _this.id && _this.isCompatibleWith(body));
+    });
+
+    // determine closest neighbor
+    if (validNeighbors.length < 1) return false;
+    else if (validNeighbors.length > 1) {
+      validNeighbors = _.sortBy(validNeighbors, function(body){
+        return _this.distanceTo(body);
+      });
+    }
+    var closestNeighbor = validNeighbors[0];
+
+    this.attractBody(closestNeighbor);
+    closestNeighbor.attractBody(this);
+  };
 
   Body.prototype.breakApart = function(objects){
     var newBodies = [];
@@ -94,6 +134,7 @@ var Body = (function() {
   };
 
   Body.prototype.combineWith = function(bodyB, objects){
+    var _this = this;
     var reactsWith = this.reactsWith;
 
     if (!reactsWith) return false;
@@ -139,6 +180,7 @@ var Body = (function() {
     var physicalProperties = _.clone(this.physicalProperties);
     newObject.physicalProperties = _.extend({}, physicalProperties, newObject.physicalProperties);
     var newBody = new Body(_.extend({}, newObject, {
+      app: _this.parent,
       game: game,
       $container: $container,
       x: x,
@@ -191,7 +233,7 @@ var Body = (function() {
     this.$el = $el;
     this.$hitArea = $wrapper.find(".hit-area");
     this.el = el;
-
+    this.$outerShell = $wrapper.find(".electrons.valence").first();
     this.matterBody = el.body;
 
     if (opt.angle) el.setAngle(opt.angle);
@@ -209,8 +251,16 @@ var Body = (function() {
     this.el.destroy();
   };
 
+  Body.prototype.distanceTo = function(body){
+    return Phaser.Math.Distance.Between(this.el.x, this.el.y, body.el.x, body.el.y);
+  };
+
   Body.prototype.getWeight = function(){
     return this.opt.weight;
+  };
+
+  Body.prototype.isCompatibleWith = function(body){
+    return _.has(this.opt.reactsWith, body.reactId);
   };
 
   Body.prototype.isEnvironment = function(){
@@ -306,6 +356,8 @@ var Body = (function() {
       this.lastDragTime = time;
       this.lastDragPosition = { x: x, y: y };
     }
+
+    this.attractNeighbors();
   };
 
   Body.prototype.onDragStart = function(x, y, time) {
