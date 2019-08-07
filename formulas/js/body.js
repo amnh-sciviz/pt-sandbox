@@ -10,7 +10,8 @@ var Body = (function() {
     type: "none",
     shape: "circle",
     weight: 0.5,
-    attractAngleStep: 1, // in degrees
+    attractAngleStep: 1, // in degrees; increase to transition faster
+    exciteDistance: 4.0, // distance between valid atoms where they will get excited (in percentage of width)
     // matter properties
     physicalProperties: {}
   };
@@ -34,8 +35,7 @@ var Body = (function() {
     this.bodyType = opt.type;
     this.environment = "none";
     this.opt = opt;
-    this.isAttracting = false;
-    this.isBeingAttractedTo = false;
+    this.attractingBody = false;
     this.connectAngles = this.opt.connectAngles ? _.mapObject(this.opt.connectAngles, function(deg, key){ return Phaser.Math.DegToRad(deg); }) : {};
     this.attractAngleStep = this.opt.attractAngleStep;
     this.shellRotation = 0;
@@ -87,6 +87,11 @@ var Body = (function() {
       });
     }
     var closestNeighbor = validNeighbors[0];
+    this.attractingBody = closestNeighbor;
+
+    var distanceTo = this.distanceTo(closestNeighbor);
+    if (distanceTo <= this.exciteDistance) this.makeExcited();
+    else this.makeCalm();
 
     this.attractBody(closestNeighbor);
     closestNeighbor.attractBody(this);
@@ -250,6 +255,7 @@ var Body = (function() {
     this.el = el;
     this.$outerShell = $wrapper.find(".electrons.valence").first();
     this.matterBody = el.body;
+    this.exciteDistance = this.opt.exciteDistance * this.el.width;
 
     if (opt.angle) el.setAngle(opt.angle);
     if (opt.angularVelocity) el.setAngularVelocity(opt.angularVelocity);
@@ -261,8 +267,8 @@ var Body = (function() {
   };
 
   Body.prototype.destroyBody = function(){
-    this.mc.off("panstart panmove panend tap pinchin pinchout");
-    this.mc.destroy();
+    this.inputManager.off("panstart panmove panend tap pinchin pinchout");
+    this.inputManager.destroy();
     this.el.destroy();
   };
 
@@ -283,38 +289,46 @@ var Body = (function() {
   };
 
   Body.prototype.isDragging = function(){
-    return this.touchId !== undefined && this.touchId !== false;
+    return this.dragging;
   };
 
   Body.prototype.loadListeners = function(){
     var _this = this;
     var el = this.$hitArea[0];
-    var mc = new Hammer(el);
+    var inputManager = new Hammer(el);
 
-    mc.on("panstart", function(e){
+    inputManager.on("panstart", function(e){
       _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
     });
 
-    mc.on("panmove", function(e){
+    inputManager.on("panmove", function(e){
       _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
     });
 
-    mc.on("panend", function(e){
+    inputManager.on("panend", function(e){
       _this.onDragEnd(e.center.x, e.center.y, new Date().getTime());
     });
-    mc.on("pinchin", function(e){
+    inputManager.on("pinchin", function(e){
       _this.onPinchIn();
     });
 
-    mc.on("pinchout", function(e){
+    inputManager.on("pinchout", function(e){
       _this.onPinchOut();
     });
 
-    mc.on("tap", function(e){
+    inputManager.on("tap", function(e){
       _this.onTap();
     });
 
-    this.mc = mc;
+    this.inputManager = inputManager;
+  };
+
+  Body.prototype.makeCalm = function(){
+    this.$el.removeClass("excited");
+  };
+
+  Body.prototype.makeExcited = function(){
+    this.$el.addClass("excited");
   };
 
   Body.prototype.onCollision = function(bodyB){
@@ -348,10 +362,13 @@ var Body = (function() {
     // console.log(this.velocityX, this.velocityY)
     // console.log(this.el)
     this.el.setVelocity(this.velocityX, this.velocityY);
-    this.touchId = false;
+    this.dragging = false;
+    this.makeCalm();
   };
 
   Body.prototype.onDragMove = function(x, y, time) {
+    this.dragging = true;
+
     // move body based on delta from start
     var dx = x - this.touchStartPosition.x;
     var dy = y - this.touchStartPosition.y;
@@ -389,6 +406,7 @@ var Body = (function() {
     this.lastDragPosition = this.touchStartPosition;
     this.velocityX = 0;
     this.velocityY = 0;
+    this.dragging = true;
   };
 
   Body.prototype.onPinchIn = function(){

@@ -185,6 +185,13 @@
   top: auto;
 }
 
+.excited .e .connector {
+  animation-duration: 1s;
+}
+.excited .e .connector:after {
+  border-color: var(--color-light);
+}
+
 .molecule {
   width: calc(var(--mwidth)*2);
   height: calc(var(--mheight));
