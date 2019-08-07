@@ -10,6 +10,7 @@ var Body = (function() {
     type: "none",
     shape: "circle",
     weight: 0.5,
+    attractAngleStep: 1, // in degrees
     // matter properties
     physicalProperties: {}
   };
@@ -36,7 +37,7 @@ var Body = (function() {
     this.isAttracting = false;
     this.isBeingAttractedTo = false;
     this.connectAngles = this.opt.connectAngles ? _.mapObject(this.opt.connectAngles, function(deg, key){ return Phaser.Math.DegToRad(deg); }) : {};
-    this.attractAngleStep = Phaser.Math.DegToRad(this.opt.attractAngleStep);
+    this.attractAngleStep = this.opt.attractAngleStep;
     this.shellRotation = 0;
 
     this.create();
@@ -52,7 +53,21 @@ var Body = (function() {
     // console.log('angleBetween: '+Phaser.Math.RadToDeg(Phaser.Math.Angle.Normalize(angleBetween)));
     // console.log('connectAngle: '+Phaser.Math.RadToDeg(Phaser.Math.Angle.Normalize(connectAngle)));
     var targetRotateAngle = Phaser.Math.RadToDeg(Phaser.Math.Angle.Normalize(angleBetween + connectAngle - angle));
-    this.$outerShell.css('transform', 'rotateZ('+targetRotateAngle+'deg)');
+    var shellRotation = this.shellRotation;
+    var delta = Math.abs(shellRotation-targetRotateAngle);
+    // wrap around if necessary
+    if (delta > 180 && targetRotateAngle > shellRotation) targetRotateAngle -= 360;
+    else if (delta > 180) targetRotateAngle += 360;
+    delta = Math.abs(shellRotation-targetRotateAngle);
+    if (delta <= this.attractAngleStep) {
+      shellRotation = targetRotateAngle;
+    } else if (shellRotation > targetRotateAngle) {
+      shellRotation -= this.attractAngleStep;
+    } else {
+      shellRotation += this.attractAngleStep;
+    }
+    this.$outerShell.css('transform', 'rotateZ('+shellRotation+'deg)');
+    this.shellRotation = shellRotation;
   };
 
   Body.prototype.attractNeighbors = function(){
