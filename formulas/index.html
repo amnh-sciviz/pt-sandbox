@@ -21,8 +21,8 @@
   <div id="templates" class="templates">
     <div id="O" class="template">
       <div class="atom non-metal O">
+        <div class="nucleus">O</div>
         <div class="shell">
-          <div class="nucleus">O</div>
           <div class="electrons valence">
             <div class="e tl"></div><div class="e tr"></div>
             <div class="e lt"></div><div class="e lb"></div>
@@ -31,12 +31,19 @@
             <div class="e rb lose share"><div class="connector"></div></div>
           </div>
         </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="Si" class="template">
       <div class="atom semi-metal Si">
+        <div class="nucleus">Si</div>
         <div class="shell">
-          <div class="nucleus">Si</div>
           <div class="electrons valence">
             <div class="e tm"></div><div class="e bm"></div>
             <div class="e lt lose share"><div class="connector"></div></div>
@@ -45,27 +52,72 @@
             <div class="e rb lose share"></div>
           </div>
         </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tl"></div><div class="e tr"></div>
+              <div class="e bl"></div><div class="e br"></div>
+              <div class="e lt"></div><div class="e lb"></div>
+              <div class="e rt"></div><div class="e rb"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div id="Na" class="template">
       <div class="atom metal Na">
+        <div class="nucleus">Na</div>
         <div class="shell">
-          <div class="nucleus">Na</div>
           <div class="electrons valence">
             <div class="e tm lose"><div class="connector"></div></div>
+          </div>
+        </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tl"></div><div class="e tr"></div>
+              <div class="e bl"></div><div class="e br"></div>
+              <div class="e lt"></div><div class="e lb"></div>
+              <div class="e rt"></div><div class="e rb"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div id="Cl" class="template">
       <div class="atom halogen Cl">
+        <div class="nucleus">Cl</div>
         <div class="shell">
-          <div class="nucleus">Cl</div>
           <div class="electrons valence">
             <div class="e tl"></div><div class="e tr"></div>
             <div class="e bl"></div><div class="e br"></div>
             <div class="e lt"></div><div class="e lb"></div>
             <div class="e rt"></div><div class="e rb gain"><div class="connector"></div></div>
+          </div>
+        </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tl"></div><div class="e tr"></div>
+              <div class="e bl"></div><div class="e br"></div>
+              <div class="e lt"></div><div class="e lb"></div>
+              <div class="e rt"></div><div class="e rb"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -74,8 +126,8 @@
       <div class="molecule SiO covalent">
         <div class="atoms">
           <div class="atom non-metal O">
+            <div class="nucleus">O</div>
             <div class="shell">
-              <div class="nucleus">O</div>
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e lt"></div><div class="e lb"></div>
@@ -85,8 +137,8 @@
             </div>
           </div>
           <div class="atom semi-metal Si">
+            <div class="nucleus">Si</div>
             <div class="shell">
-              <div class="nucleus">Si</div>
               <div class="electrons valence">
                 <div class="e tm"></div><div class="e bm"></div>
                 <div class="e lt shared"></div>
@@ -102,8 +154,8 @@
       <div class="molecule molecule2 SiO2 covalent">
         <div class="atoms">
           <div class="atom non-metal O">
+            <div class="nucleus">O</div>
             <div class="shell">
-              <div class="nucleus">O</div>
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e lt"></div><div class="e lb"></div>
@@ -113,8 +165,8 @@
             </div>
           </div>
           <div class="atom semi-metal Si">
+            <div class="nucleus">Si</div>
             <div class="shell">
-              <div class="nucleus">Si</div>
               <div class="electrons">
                 <div class="e tm"></div><div class="e bm"></div>
                 <div class="e lt shared"></div>
@@ -123,8 +175,8 @@
             </div>
           </div>
           <div class="atom non-metal O">
+            <div class="nucleus">O</div>
             <div class="shell">
-              <div class="nucleus">O</div>
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e lt"></div><div class="e lb"></div>
@@ -140,16 +192,16 @@
       <div class="molecule NaCl ionic">
         <div class="atoms">
           <div class="atom metal Na">
+            <div class="nucleus">Na<sup>+</sup></div>
             <div class="shell positive">
-              <div class="nucleus">Na<sup>+</sup></div>
               <div class="electrons">
                 <div class="e tm lossed"></div>
               </div>
             </div>
           </div>
           <div class="atom halogen Cl">
+            <div class="nucleus">Cl<sup>-</sup></div>
             <div class="shell negative">
-              <div class="nucleus">Cl<sup>-</sup></div>
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e bl"></div><div class="e br"></div>

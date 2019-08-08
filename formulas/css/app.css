@@ -71,7 +71,8 @@
   left: 0;
   border-radius: 50%;
   border: 2px solid var(--color-medium);
-  background: black;
+  transition: transform 1s ease-in-out;
+  /* background: black; */
 }
 /* .shell.positive {
   border-color: var(--color-positive);
@@ -91,6 +92,8 @@
   border-radius: 50%;
   background: var(--color-metal);
   transform-origin: 50% 50%;
+  margin-left: 2px;
+  margin-top: 2px;
 }
 .electrons {
   width: 100%;
@@ -108,6 +111,7 @@
   transform-origin: center center;
   box-sizing: border-box;
   border: 1px solid var(--color-light);
+  transition: transform 1s ease-in-out;
 }
 .e.top-left, .e.tl { top: 0; left: 50%; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--eoffset)*-1.5); }
 .e.top-middle, .e.tm { top: 0; left: 50%; margin-top: calc(var(--ewidth)*-0.5); margin-left: calc(var(--ewidth)*-0.5); }
@@ -220,6 +224,48 @@
 .molecule2 .atom:nth-child(2) {
   margin-left: calc(var(--mwidth)*-0.5);
   left: 50%;
+}
+
+.visible-on-select {
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+.selected .visible-on-select {
+  opacity: 1;
+}
+.atom.selected .shell {
+  transform: scale3d(2, 2, 2);
+}
+.atom.selected .e .connector {
+  display: none;
+}
+.atom.selected .e.gain {
+  display: none;
+}
+.atom.selected .electrons {
+  animation: spin 8s infinite linear;
+}
+.atom.selected .e {
+  transform: scale3d(0.5, 0.5, 0.5);
+}
+.inner-shells .e {
+  background: var(--color-medium);
+  transform: scale3d(1, 1, 1);
+}
+.inner-shells .shell:nth-child(2) .e {
+  transform: scale3d(0.6667, 0.6667, 0.6667);
+}
+.inner-shells .shell:first-child {
+  transform: scale3d(1, 1, 1);
+}
+.inner-shells .shell:nth-child(2) {
+  transform: scale3d(1.5, 1.5, 1.5);
+}
+.inner-shells .shell:first-child .electrons {
+  animation-duration: 4s;
+}
+.inner-shells .shell:nth-child(2) .electrons {
+  animation-duration: 6s;
 }
 
 .O .nucleus {
@@ -367,5 +413,13 @@
   to {
     transform: translate3d(0, 0, 0);
     opacity: 0;
+  }
+}
+@keyframes spin {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
   }
 }

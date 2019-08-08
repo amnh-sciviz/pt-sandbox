@@ -395,6 +395,7 @@ var Body = (function() {
   Body.prototype.onDragStart = function(x, y, time) {
     // console.log('start '+this.id+' '+x+', '+y);
     // keep track of touch start time/position
+    this.$el.removeClass("selected");
     this.touchStartTime = time;
     this.touchStartPosition = { x: x, y: y };
     // keep track of body start position
@@ -411,14 +412,17 @@ var Body = (function() {
 
   Body.prototype.onPinchIn = function(){
     console.log("Pinch in "+this.id);
+    this.$el.removeClass("selected");
   };
 
   Body.prototype.onPinchOut = function(){
     console.log("Pinch out "+this.id);
+    this.$el.addClass("selected");
   };
 
   Body.prototype.onTap = function(){
     console.log("Tap "+this.id);
+    this.$el.toggleClass("selected");
   };
 
   Body.prototype.update = function(props){
