@@ -309,7 +309,8 @@
   animation: moveUpAlot 2s infinite;
 }
 
-.formula {
+.formula,
+.payoff {
   text-align: center;
   position: absolute;
   height: 60px;
@@ -325,6 +326,26 @@
 .formula .active {
   animation: pulse 2s infinite linear;
   color: white;
+}
+
+.payoff {
+  bottom: auto;
+  height: auto;
+  top: 100%;
+  margin-top: 1rem;
+  animation: tada 1s;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
+  transform: scale3d(0, 0, 0);
+}
+.payoff img {
+  height: 80px;
+  width: auto;
+  display: inline-block;
+}
+.payoff p {
+  margin: 0;
+  white-space: nowrap;
 }
 
 .O .nucleus {
@@ -506,5 +527,33 @@
   }
   to {
     transform: rotateZ(360deg);
+  }
+}
+
+@keyframes tada {
+  from {
+    transform: scale3d(0, 0, 0);
+  }
+
+  10%,
+  20% {
+    transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg);
+  }
+
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+  }
+
+  40%,
+  60%,
+  80% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
   }
 }
