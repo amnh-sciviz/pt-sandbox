@@ -171,8 +171,7 @@
 }
 
 /* arrow head */
-.e.lose .connector:after,
-.e.gain .connector:after {
+.e .connector:after {
   content: " ";
   border: solid var(--color-medium);
   border-width: 0 2px 2px 0;
@@ -205,6 +204,7 @@
 .molecule .atom {
   position: absolute;
   top: 0;
+  transition: transform 1s ease-in-out;
 }
 .molecule .atom:first-child {
   left: -2px;
@@ -230,8 +230,18 @@
   opacity: 0;
   transition: opacity 1s ease-in-out;
 }
+.connector.visible-on-select {
+  display: none;
+  opacity: 1;
+}
 .selected .visible-on-select {
   opacity: 1;
+}
+.selected .connector.visible-on-select {
+  display: block;
+}
+.selected .invisible-on-select {
+  display: none;
 }
 .atom.selected .shell {
   transform: scale3d(2, 2, 2);
@@ -248,7 +258,19 @@
 .atom.selected .e {
   transform: scale3d(0.5, 0.5, 0.5);
 }
-.inner-shells .e {
+.molecule.selected .atom:first-child {
+  transform: translate3d(-33.33%, 0, 0);
+}
+.molecule.selected .atom:last-child {
+  transform: translate3d(33.33%, 0, 0);
+}
+.molecule2.selected .atom:first-child {
+  transform: translate3d(-66.67%, 0, 0);
+}
+.molecule2.selected .atom:last-child {
+  transform: translate3d(66.67%, 0, 0);
+}
+.atom.selected .inner-shells .e {
   background: var(--color-medium);
   transform: scale3d(1, 1, 1);
 }
@@ -268,6 +290,25 @@
   animation-duration: 6s;
 }
 
+.molecule.ionic .electrons {
+  transition: transform 1s ease-in-out;
+}
+.molecule.ionic .atom:first-child .electrons {
+  transform: rotateZ(-45deg);
+}
+.molecule.ionic .atom:last-child .electrons {
+  transform: rotateZ(45deg);
+}
+.molecule.ionic.selected .atom:first-child .electrons {
+  transform: rotateZ(90deg);
+}
+.molecule.ionic.selected .atom:last-child .electrons {
+  transform: rotateZ(165deg);
+}
+.molecule.ionic.selected .e.lose {
+  animation: moveUpAlot 2s infinite;
+}
+
 .O .nucleus {
   transform: scale3d(0.6, 0.6, 1);
 }
@@ -277,12 +318,7 @@
 .SiO2 .O:last-child .electrons {
   transform: rotateZ(180deg);
 }
-.NaCl .Na .electrons {
-  transform: rotateZ(-45deg);
-}
-.NaCl .Cl .electrons {
-  transform: rotateZ(45deg);
-}
+
 
 .templates {
   display: none;
@@ -402,6 +438,20 @@
   }
 }
 
+@keyframes moveUpAlot {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, -400%, 0);
+    opacity: 0;
+  }
+}
+
 @keyframes moveDown {
   from {
     transform: translate3d(0, -50%, 0);
@@ -413,6 +463,23 @@
   to {
     transform: translate3d(0, 0, 0);
     opacity: 0;
+  }
+}
+@keyframes moveLeft {
+  from, to {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes moveRight {
+  from, to {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(50%, 0, 0);
   }
 }
 @keyframes spin {
