@@ -309,6 +309,24 @@
   animation: moveUpAlot 2s infinite;
 }
 
+.formula {
+  text-align: center;
+  position: absolute;
+  height: 60px;
+  bottom: -75px;
+  left: 0;
+  width: 100%;
+  color: var(--color-light);
+}
+.formula span {
+  display: inline-block;
+  margin: 0 -1px;
+}
+.formula .active {
+  animation: pulse 2s infinite linear;
+  color: white;
+}
+
 .O .nucleus {
   transform: scale3d(0.6, 0.6, 1);
 }
@@ -420,7 +438,7 @@
 
   50% {
     transform: scale3d(1.05, 1.05, 1.05);
-    opacity: 0.5;
+    opacity: 0.2;
   }
 }
 
