@@ -125,27 +125,27 @@
     <div id="SiO" class="template">
       <div class="molecule SiO covalent">
         <div class="atoms">
-          <div class="atom non-metal O">
+          <div class="atom non-metal O scale-left">
             <div class="nucleus">O</div>
             <div class="shell">
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e lt"></div><div class="e lb"></div>
-                <div class="e rt gain visible-on-select"></div>
+                <div class="e rt gain visible-on-select visible-on-scale"></div>
                 <div class="e bm"></div>
-                <div class="e rb shared"><div class="connector visible-on-select"></div></div>
+                <div class="e rb shared"><div class="connector visible-on-select visible-on-scale"></div></div>
               </div>
             </div>
           </div>
-          <div class="atom semi-metal Si">
+          <div class="atom semi-metal Si scale-right">
             <div class="nucleus">Si</div>
             <div class="shell">
               <div class="electrons valence">
                 <div class="e tm"></div><div class="e bm"></div>
                 <div class="e lb gain visible-on-select"></div>
-                <div class="e lt shared"><div class="connector visible-on-select"></div></div>
-                <div class="e rt gain share invisible-on-select"><div class="connector"></div></div>
-                <div class="e rb lose share"><div class="connector invisible-on-select"></div></div>
+                <div class="e lt shared"><div class="connector visible-on-select visible-on-scale"></div></div>
+                <div class="e rt gain share invisible-on-select invisible-on-scale"><div class="connector"></div></div>
+                <div class="e rb lose share"><div class="connector invisible-on-select invisible-on-scale"></div></div>
               </div>
             </div>
           </div>
@@ -160,15 +160,15 @@
     <div id="SiO2" class="template">
       <div class="molecule molecule2 SiO2 covalent complete">
         <div class="atoms">
-          <div class="atom non-metal O">
+          <div class="atom non-metal O scale-left">
             <div class="nucleus">O</div>
             <div class="shell">
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e lt"></div><div class="e lb"></div>
-                <div class="e rt gain visible-on-select"></div>
+                <div class="e rt gain visible-on-select visible-on-scale"></div>
                 <div class="e bm"></div>
-                <div class="e rb shared"><div class="connector visible-on-select"></div></div>
+                <div class="e rb shared"><div class="connector visible-on-select visible-on-scale"></div></div>
               </div>
             </div>
           </div>
@@ -177,22 +177,22 @@
             <div class="shell">
               <div class="electrons">
                 <div class="e tm"></div><div class="e bm"></div>
-                <div class="e lb gain visible-on-select"></div>
-                <div class="e rt gain visible-on-select"></div>
-                <div class="e lt shared"><div class="connector visible-on-select"></div></div>
-                <div class="e rb shared"><div class="connector visible-on-select"></div></div>
+                <div class="e lb gain visible-on-select visible-on-scale"></div>
+                <div class="e rt gain visible-on-select visible-on-scale"></div>
+                <div class="e lt shared"><div class="connector visible-on-select visible-on-scale"></div></div>
+                <div class="e rb shared"><div class="connector visible-on-select visible-on-scale"></div></div>
               </div>
             </div>
           </div>
-          <div class="atom non-metal O">
+          <div class="atom non-metal O scale-right">
             <div class="nucleus">O</div>
             <div class="shell">
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e lt"></div><div class="e lb"></div>
-                <div class="e rt gain visible-on-select"></div>
+                <div class="e rt gain visible-on-select visible-on-scale visible-on-scale"></div>
                 <div class="e bm"></div>
-                <div class="e rb shared"><div class="connector visible-on-select"></div></div>
+                <div class="e rb shared"><div class="connector visible-on-select visible-on-scale"></div></div>
               </div>
             </div>
           </div>
@@ -206,24 +206,24 @@
     <div id="NaCl" class="template">
       <div class="molecule NaCl ionic complete">
         <div class="atoms">
-          <div class="atom metal Na">
+          <div class="atom metal Na scale-left">
             <div class="nucleus">Na<sup>+</sup></div>
             <div class="shell positive">
               <div class="electrons">
                 <div class="e tm lossed"></div>
-                <div class="e tm lose visible-on-select"></div>
+                <div class="e tm lose visible-on-select visible-on-scale"></div>
               </div>
             </div>
           </div>
-          <div class="atom halogen Cl">
+          <div class="atom halogen Cl scale-right">
             <div class="nucleus">Cl<sup>-</sup></div>
             <div class="shell negative">
               <div class="electrons">
                 <div class="e tl"></div><div class="e tr"></div>
                 <div class="e bl"></div><div class="e br"></div>
                 <div class="e lt"></div><div class="e lb"></div>
-                <div class="e rt"></div><div class="e rb gained invisible-on-select"></div>
-                <div class="e rb gain visible-on-select"></div>
+                <div class="e rt"></div><div class="e rb gained invisible-on-select visible-on-scale"></div>
+                <div class="e rb gain visible-on-select visible-on-scale"></div>
               </div>
             </div>
           </div>
@@ -236,6 +236,9 @@
     </div>
   </div>
 
+  <!-- <script src="../shared/js/vendor/touch-emulator.js"></script>
+  <script> TouchEmulator(); </script> -->
+
   <script src="../shared/js/vendor/jquery-3.4.1.min.js"></script>
   <script src="../shared/js/vendor/underscore-min.js"></script>
   <script src="../shared/js/vendor/hammer.min.js"></script>
@@ -243,6 +246,7 @@
   <script src="../shared/js/vendor/howler.min.js"></script>
   <script src="../shared/js/vendor/dat.gui.min.js"></script>
   <script src="../shared/js/sound.js"></script>
+
   <script src="js/body.js"></script>
   <script src="js/app.js"></script>
 </body>

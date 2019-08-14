@@ -257,6 +257,10 @@ var Body = (function() {
     this.matterBody = el.body;
     this.exciteDistance = this.opt.exciteDistance * this.el.width;
 
+    this.$scaleLeft = $wrapper.find(".scale-left");
+    this.$scaleRight = $wrapper.find(".scale-right");
+    this.canScale = this.$scaleLeft.length > 0 && this.$scaleRight.length > 0;
+
     if (opt.angle) el.setAngle(opt.angle);
     if (opt.angularVelocity) el.setAngularVelocity(opt.angularVelocity);
     if (opt.velocity) el.setVelocity(opt.velocity.x, opt.velocity.y);
@@ -267,7 +271,7 @@ var Body = (function() {
   };
 
   Body.prototype.destroyBody = function(){
-    this.inputManager.off("panstart panmove panend tap pinchin pinchout");
+    this.inputManager.off("panstart panmove panend tap pinchstart pinchmove pinchend rotatestart rotatemove rotateend");
     this.inputManager.destroy();
     this.el.destroy();
   };
@@ -300,20 +304,33 @@ var Body = (function() {
     inputManager.on("panstart", function(e){
       _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
     });
-
     inputManager.on("panmove", function(e){
       _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
     });
-
     inputManager.on("panend", function(e){
       _this.onDragEnd(e.center.x, e.center.y, new Date().getTime());
     });
-    inputManager.on("pinchin", function(e){
-      _this.onPinchIn();
-    });
 
-    inputManager.on("pinchout", function(e){
-      _this.onPinchOut();
+    if (this.canScale) {
+      inputManager.on("pinchstart", function(e){
+        _this.onPinchStart();
+      });
+      inputManager.on("pinchmove", function(e){
+        _this.onPinchMove(e.scale);
+      });
+      inputManager.on("pinchend", function(e){
+        _this.onPinchEnd();
+      });
+    }
+
+    inputManager.on("rotatestart", function(e){
+      _this.onRotateStart();
+    });
+    inputManager.on("rotatemove", function(e){
+      _this.onRotateMove(e.rotation);
+    });
+    inputManager.on("rotateend", function(e){
+      _this.onRotateEnd();
     });
 
     inputManager.on("tap", function(e){
@@ -393,6 +410,7 @@ var Body = (function() {
   };
 
   Body.prototype.onDragStart = function(x, y, time) {
+    // console.log(this.el);
     // console.log('start '+this.id+' '+x+', '+y);
     // keep track of touch start time/position
     this.$el.removeClass("selected");
@@ -410,14 +428,39 @@ var Body = (function() {
     this.dragging = true;
   };
 
-  Body.prototype.onPinchIn = function(){
-    console.log("Pinch in "+this.id);
-    this.$el.removeClass("selected");
+  Body.prototype.onPinchEnd = function(){
+    console.log("Pinch end "+this.id);
+    this.$el.removeClass("scaling");
+    this.$scaleLeft.css('transform', 'translate3d(0, 0, 0)');
+    this.$scaleRight.css('transform', 'translate3d(0, 0, 0)');
   };
 
-  Body.prototype.onPinchOut = function(){
-    console.log("Pinch out "+this.id);
-    this.$el.addClass("selected");
+  Body.prototype.onPinchMove = function(scale){
+    var scalePercent = scale * 100;
+    this.$scaleLeft.css('transform', 'translate3d(-'+scalePercent+'%, 0, 0)');
+    this.$scaleRight.css('transform', 'translate3d('+scalePercent+'%, 0, 0)');
+  };
+
+  Body.prototype.onPinchStart = function(){
+    console.log("Pinch start "+this.id);
+    this.$el.addClass("scaling");
+  };
+
+  Body.prototype.onRotateEnd = function(){
+    console.log("Rotate end "+this.id);
+    this.$el.removeClass("rotating");
+  };
+
+  Body.prototype.onRotateMove = function(rotationDegrees){
+    // var angle = this.el.body.angle;
+    var rotation = this.el.rotation; // in radians
+    var rotateDelta = Phaser.Math.DegToRad(rotationDegrees);
+    this.el.setRotation(rotation+rotateDelta);
+  };
+
+  Body.prototype.onRotateStart = function(){
+    console.log("Rotate start "+this.id);
+    this.$el.addClass("rotating");
   };
 
   Body.prototype.onTap = function(){

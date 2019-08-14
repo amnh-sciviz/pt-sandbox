@@ -206,6 +206,9 @@
   top: 0;
   transition: transform 1s ease-in-out;
 }
+.molecule .atom.scaling {
+  transition: none;
+}
 .molecule .atom:first-child {
   left: -2px;
 }
@@ -226,21 +229,26 @@
   left: 50%;
 }
 
-.visible-on-select {
+.visible-on-select,
+.visible-on-scale {
   opacity: 0;
   transition: opacity 1s ease-in-out;
 }
-.connector.visible-on-select {
+.connector.visible-on-select,
+.connector.visible-on-scale {
   display: none;
   opacity: 1;
 }
-.selected .visible-on-select {
+.selected .visible-on-select,
+.scaling .visible-on-scale {
   opacity: 1;
 }
-.selected .connector.visible-on-select {
+.selected .connector.visible-on-select,
+.scaling .connector.visible-on-scale {
   display: block;
 }
-.selected .invisible-on-select {
+.selected .invisible-on-select,
+.scaling .invisible-on-scale {
   display: none;
 }
 .atom.selected .shell {
@@ -258,16 +266,16 @@
 .atom.selected .e {
   transform: scale3d(0.5, 0.5, 0.5);
 }
-.molecule.selected .atom:first-child {
+.molecule.selected .atom.scale-left {
   transform: translate3d(-33.33%, 0, 0);
 }
-.molecule.selected .atom:last-child {
+.molecule.selected .atom.scale-right {
   transform: translate3d(33.33%, 0, 0);
 }
-.molecule2.selected .atom:first-child {
+.molecule2.selected .atom.scale-left {
   transform: translate3d(-66.67%, 0, 0);
 }
-.molecule2.selected .atom:last-child {
+.molecule2.selected .atom.scale-right {
   transform: translate3d(66.67%, 0, 0);
 }
 .atom.selected .inner-shells .e {
