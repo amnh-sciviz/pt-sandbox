@@ -312,7 +312,7 @@ var Body = (function() {
       else if (_this.canScale && t==="pinchstart") _this.onPinchStart();
       else if (_this.canScale && t==="pinchmove") _this.onPinchMove(e.scale);
       else if (_this.canScale && t==="pinchend") _this.onPinchEnd();
-      else if (t==="rotatestart") _this.onRotateStart();
+      else if (t==="rotatestart") _this.onRotateStart(e.rotation);
       else if (t==="rotatemove") _this.onRotateMove(e.rotation);
       else if (t==="rotateend") _this.onRotateEnd();
       else if (t==="tap") _this.onTap();
@@ -411,20 +411,23 @@ var Body = (function() {
 
   Body.prototype.onPinchEnd = function(){
     console.log("Pinch end "+this.id);
-    this.$el.removeClass("scaling");
-    this.$scaleLeft.css('transform', 'translate3d(0, 0, 0)');
-    this.$scaleRight.css('transform', 'translate3d(0, 0, 0)');
+    this.$el.removeClass("selected");
+    // this.$scaleLeft.css('transform', '');
+    // this.$scaleRight.css('transform', '');
   };
 
   Body.prototype.onPinchMove = function(scale){
-    var scalePercent = scale * 100;
-    this.$scaleLeft.css('transform', 'translate3d(-'+scalePercent+'%, 0, 0)');
-    this.$scaleRight.css('transform', 'translate3d('+scalePercent+'%, 0, 0)');
+    //console.log(scale)
+    if (scale > 1.0 && !this.$el.hasClass("selected")) this.$el.addClass("selected");
+    else if (scale < 1.0 && this.$el.hasClass("selected")) this.$el.removeClass("selected");
+    // var scalePercent = Math.max(scale * 100, 100);
+    // this.$scaleLeft.css('transform', 'translate3d(-'+scalePercent+'%, 0, 0)');
+    // this.$scaleRight.css('transform', 'translate3d('+scalePercent+'%, 0, 0)');
   };
 
   Body.prototype.onPinchStart = function(){
     console.log("Pinch start "+this.id);
-    this.$el.addClass("scaling");
+    // this.$el.addClass("selected");
   };
 
   Body.prototype.onRotateEnd = function(){
@@ -433,14 +436,15 @@ var Body = (function() {
   };
 
   Body.prototype.onRotateMove = function(rotationDegrees){
-    // var angle = this.el.body.angle;
-    var rotation = this.el.rotation; // in radians
-    var rotateDelta = Phaser.Math.DegToRad(rotationDegrees);
-    this.el.setRotation(rotation+rotateDelta);
+    var deltaAngle = Phaser.Math.DegToRad(rotationDegrees - this.startRotation);
+    // console.log("Delta", rotationDegrees - this.startRotation)
+    this.el.setRotation(Phaser.Math.Angle.Normalize(this.startAngle + deltaAngle));
   };
 
-  Body.prototype.onRotateStart = function(){
-    console.log("Rotate start "+this.id);
+  Body.prototype.onRotateStart = function(rotationDegrees){
+    this.startRotation = rotationDegrees;
+    this.startAngle = this.el.rotation;
+    console.log("Rotate start "+this.id, this.startRotation, this.startAngle);
     this.$el.addClass("rotating");
   };
 
