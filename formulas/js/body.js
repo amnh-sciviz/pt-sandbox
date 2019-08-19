@@ -13,7 +13,8 @@ var Body = (function() {
     attractAngleStep: 1, // in degrees; increase to transition faster
     exciteDistance: 4.0, // distance between valid atoms where they will get excited (in percentage of width)
     // matter properties
-    physicalProperties: {}
+    physicalProperties: {},
+    supportedEvents: "panstart panmove panend pinchstart pinchmove pinchend rotatestart rotatemove rotateend tap"
   };
 
   var $container, game, physics;
@@ -271,7 +272,7 @@ var Body = (function() {
   };
 
   Body.prototype.destroyBody = function(){
-    this.inputManager.off("panstart panmove panend tap pinchstart pinchmove pinchend rotatestart rotatemove rotateend");
+    this.inputManager.off(this.opt.supportedEvents);
     this.inputManager.destroy();
     this.el.destroy();
   };
@@ -301,40 +302,18 @@ var Body = (function() {
     var el = this.$hitArea[0];
     var inputManager = new Hammer(el);
 
-    inputManager.on("panstart", function(e){
-      _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
-    });
-    inputManager.on("panmove", function(e){
-      _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
-    });
-    inputManager.on("panend", function(e){
-      _this.onDragEnd(e.center.x, e.center.y, new Date().getTime());
-    });
-
-    if (this.canScale) {
-      inputManager.on("pinchstart", function(e){
-        _this.onPinchStart();
-      });
-      inputManager.on("pinchmove", function(e){
-        _this.onPinchMove(e.scale);
-      });
-      inputManager.on("pinchend", function(e){
-        _this.onPinchEnd();
-      });
-    }
-
-    inputManager.on("rotatestart", function(e){
-      _this.onRotateStart();
-    });
-    inputManager.on("rotatemove", function(e){
-      _this.onRotateMove(e.rotation);
-    });
-    inputManager.on("rotateend", function(e){
-      _this.onRotateEnd();
-    });
-
-    inputManager.on("tap", function(e){
-      _this.onTap();
+    inputManager.on(this.opt.supportedEvents, function(e){
+      var t = e.type;
+      if (t==="panstart") _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
+      else if (t==="panmove") _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
+      else if (t==="panmove") _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
+      else if (_this.canScale && t==="pinchstart") _this.onPinchStart();
+      else if (_this.canScale && t==="pinchmove") _this.onPinchMove(e.scale);
+      else if (_this.canScale && t==="pinchend") _this.onPinchEnd();
+      else if (t==="rotatestart") _this.onRotateStart();
+      else if (t==="rotatemove") _this.onRotateMove(e.rotation);
+      else if (t==="rotateend") _this.onRotateEnd();
+      else if (t==="tap") _this.onTap();
     });
 
     this.inputManager = inputManager;
