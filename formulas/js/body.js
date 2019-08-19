@@ -302,6 +302,8 @@ var Body = (function() {
     var el = this.$hitArea[0];
     var inputManager = new Hammer(el);
 
+    inputManager.get('pinch').set({ enable: true });
+    inputManager.get('rotate').set({ enable: true });
     inputManager.on(this.opt.supportedEvents, function(e){
       var t = e.type;
       if (t==="panstart") _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
