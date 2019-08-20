@@ -318,7 +318,8 @@
 }
 
 .formula,
-.payoff {
+.payoff,
+.label {
   text-align: center;
   position: absolute;
   height: 60px;
@@ -327,6 +328,7 @@
   width: 100%;
   color: var(--color-light);
 }
+.label span,
 .formula span {
   display: inline-block;
   margin: 0 -1px;
@@ -334,6 +336,12 @@
 .formula .active {
   animation: pulse 2s infinite linear;
   color: white;
+}
+
+.label {
+  bottom: auto;
+  top: -40px;
+  font-size: 0.8rem;
 }
 
 .payoff {
