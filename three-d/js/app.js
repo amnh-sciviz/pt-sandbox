@@ -41,34 +41,24 @@ function getSphere(radius, color){
 
 function addMolecule(){
   var moleculeGroup = new THREE.Group();
+  var rotateGroup = new THREE.Group();
+  rotateGroup.name = 'rotate';
 
   // add tetrahedral
   var tetraGeometry = new THREE.TetrahedronGeometry(radius);
-
-  // console.log(currentIndex, currentFaceIndex)
-
-  // rotate as needed
-  var rotationAmount = Math.atan( 2*Math.sqrt(2)); // https://en.wikipedia.org/wiki/Tetrahedron#Formulas_for_a_regular_tetrahedron
-  var rotationAxis = new THREE.Vector3( 1, 1, 0 ).normalize();
-  // if (currentIndex >= 1) rotationAmount = Math.atan(Math.sqrt(2));
-  // if (currentIndex >= 1 && currentFaceIndex===0) rotationAxis = new THREE.Vector3( -1, -1, -1 ).normalize();
-  if (currentIndex >= 0 && currentFaceIndex===1) rotationAxis = new THREE.Vector3( 0, -1, -1 ).normalize();
-  else if (currentIndex >= 0 && currentFaceIndex===2) rotationAxis = new THREE.Vector3( 0, 1, 1 ).normalize();
-  else if (currentIndex >= 0 && currentFaceIndex===3) rotationAxis = new THREE.Vector3( 1, -1, 0 ).normalize();
-  if (currentIndex >= 0) tetraGeometry.applyMatrix(new THREE.Matrix4().makeRotationAxis(rotationAxis, rotationAmount));
-
   var tetraMaterial = new THREE.MeshPhongMaterial( { color: 0xdfba52, transparent: true, opacity: 0.333 } );
   var tetra = new THREE.Mesh(tetraGeometry, tetraMaterial);
   var tvertices = tetraGeometry.vertices;
   tetra.name = 'tetra';
-  moleculeGroup.add(tetra);
+  rotateGroup.add(tetra);
 
+  // console.log(currentIndex, currentFaceIndex)
   // console.log(tetraGeometry.faces)
   // console.log(tvertices)
 
   // add silicon
   var si = getSphere(radius * 0.2, 0x7a9b8a);
-  moleculeGroup.add(si);
+  rotateGroup.add(si);
 
   // add oxygen
   var o;
@@ -77,7 +67,7 @@ function addMolecule(){
     var color = showAxes ? colors[i] : 0xd3aa58;
     o = getSphere(radius * 0.15, color);
     o.position.copy(tvertices[i]);
-    moleculeGroup.add(o);
+    rotateGroup.add(o);
   }
 
   // add Mg
@@ -85,25 +75,35 @@ function addMolecule(){
   var mg2 = getSphere(radius * 0.125, 0x306090);
   mg1.translateOnAxis(tetraGeometry.faces[0].normal, radius);
   mg2.translateOnAxis(tetraGeometry.faces[1].normal, radius);
-  moleculeGroup.add(mg1);
-  moleculeGroup.add(mg2);
+  rotateGroup.add(mg1);
+  rotateGroup.add(mg2);
 
   // helper
   if (showAxes) {
     var moleculeAxis = new THREE.AxesHelper(radius*2);
-    moleculeGroup.add(moleculeAxis);
+    rotateGroup.add(moleculeAxis);
     var moleculeNormals = new THREE.FaceNormalsHelper( tetra, radius * 0.5);
-    moleculeGroup.add(moleculeNormals);
+    rotateGroup.add(moleculeNormals);
   }
+
+  // rotate as needed
+  var rotationAmount = Math.atan( 2*Math.sqrt(2)); // https://en.wikipedia.org/wiki/Tetrahedron#Formulas_for_a_regular_tetrahedron
+  var rotationAxis = new THREE.Vector3(1, 1, 0).normalize();
+  if (currentIndex >= 0 && currentFaceIndex===1) rotationAxis = new THREE.Vector3(0, -1, -1).normalize();
+  else if (currentIndex >= 0 && currentFaceIndex===2) rotationAxis = new THREE.Vector3(0, 1, 1).normalize();
+  else if (currentIndex >= 0 && currentFaceIndex===3) rotationAxis = new THREE.Vector3(1, -1, 0).normalize();
+  if (currentIndex >= 0) rotateGroup.applyMatrix(new THREE.Matrix4().makeRotationAxis(rotationAxis, rotationAmount));
+  moleculeGroup.add(rotateGroup);
 
   if (currentIndex >= 0) {
     if (currentIndex >= molecules.length) return;
 
-    var parent = molecules[currentIndex];
+    var parent = molecules[currentIndex].getObjectByName('rotate');
     var parentTetra = parent.getObjectByName('tetra');
     var parentFace = parentTetra.geometry.faces[currentFaceIndex];
 
-    moleculeGroup.position.copy(parent.position);
+    // moleculeGroup.position.copy(parent.position);
+    parent.add(moleculeGroup);
     moleculeGroup.translateOnAxis(parentFace.normal, radius*2);
     // moleculeGroup.up.copy(tetraGeometry.faces[0].normal);
     // moleculeGroup.lookAt(parent.position);
@@ -115,27 +115,33 @@ function addMolecule(){
       currentFaceIndex = 0;
     }
 
+    // check if position is taken already
+    var found = false;
+    var myPosition = new THREE.Vector3(0, 0, 0);
+    var yourPosition = new THREE.Vector3(0, 0, 0);
+    myPosition = moleculeGroup.getWorldPosition(myPosition);
+    for (var i=0; i<molecules.length; i++){
+      if (molecules[i].getWorldPosition(yourPosition).equals(myPosition)) {
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      molecules.push(moleculeGroup);
+
+    } else {
+      parent.remove(moleculeGroup);
+      addMolecule();
+    }
+
   // first
   } else {
     moleculeGroup.position.set(0, 0, 0);
     currentIndex = 0;
     currentFaceIndex = 0;
-  }
-
-  // check if position is taken already
-  var found = false;
-  for (var i=0; i<molecules.length; i++){
-    if (molecules[i].position.equals(moleculeGroup.position)) {
-      found = true;
-      break;
-    }
-  }
-
-  if (!found) {
     molecules.push(moleculeGroup);
     scene.add(moleculeGroup);
-  } else {
-    addMolecule();
   }
 
 }
