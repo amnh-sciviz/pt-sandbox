@@ -30,6 +30,10 @@
     button:hover {
       background: #4981b9;
     }
+    #axis {
+      left: auto;
+      right: 0;
+    }
   </style>
 
 </head>
@@ -37,6 +41,7 @@
 <body>
 
   <button id="add" onClick="javascript:addMolecule();">Add molecule</button>
+  <button id="axis" onClick="javascript:toggleAxis();">Toggle axis</button>
 
   <script src="../shared/js/vendor/three.min.js"></script>
   <script src="../shared/js/vendor/OrbitControls.js"></script>

@@ -8,6 +8,7 @@ var currentIndex = -1;
 var currentFaceIndex = -1;
 var showAxes = false;
 var molecules = [];
+var helpers = [];
 
 var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(winW, winH);
@@ -64,8 +65,9 @@ function addMolecule(){
   var o;
   var colors = [0xff0000, 0x00ff00, 0x0000ff, 0x00ffff];
   for(var i=0; i<tvertices.length; i++){
-    var color = showAxes ? colors[i] : 0xd3aa58;
-    o = getSphere(radius * 0.15, color);
+    // var color = showAxes ? colors[i] : 0xd3aa58;
+    // o = getSphere(radius * 0.15, color);
+    o = getSphere(radius * 0.15, 0xd3aa58);
     o.position.copy(tvertices[i]);
     rotateGroup.add(o);
   }
@@ -80,12 +82,13 @@ function addMolecule(){
   rotateGroup.add(mg2);
 
   // helper
-  if (showAxes) {
-    var moleculeAxis = new THREE.AxesHelper(radius*2);
-    rotateGroup.add(moleculeAxis);
-    var moleculeNormals = new THREE.FaceNormalsHelper( tetra, radius * 0.5);
-    rotateGroup.add(moleculeNormals);
-  }
+  var moleculeAxis = new THREE.AxesHelper(radius*2);
+  moleculeAxis.visible = showAxes;
+  rotateGroup.add(moleculeAxis);
+  var moleculeNormals = new THREE.FaceNormalsHelper( tetra, radius * 0.5);
+  moleculeAxis.visible = showAxes;
+  rotateGroup.add(moleculeNormals);
+  helpers.push(moleculeAxis, moleculeNormals);
 
   // rotate as needed
   var rotationAmount = Math.atan( 2*Math.sqrt(2)); // https://en.wikipedia.org/wiki/Tetrahedron#Formulas_for_a_regular_tetrahedron
@@ -149,11 +152,10 @@ function addMolecule(){
 }
 
 // show x-y-z axis
-if (showAxes) {
-  var axesHelper = new THREE.AxesHelper(radius * 25);
-  scene.add(axesHelper);
-}
-
+var axesHelper = new THREE.AxesHelper(radius * 25);
+axesHelper.visible = showAxes;
+scene.add(axesHelper);
+helpers.push(axesHelper);
 
 // add lights
 var ambientLight = new THREE.AmbientLight(0xffffff);
@@ -170,6 +172,13 @@ function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function toggleAxis(){
+  showAxes = !showAxes;
+  for (var i=0; i<helpers.length; i++) {
+    helpers[i].visible = showAxes;
+  }
 }
 
 // the main loop
