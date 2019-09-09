@@ -86,7 +86,7 @@ function addMolecule(){
   moleculeAxis.visible = showAxes;
   rotateGroup.add(moleculeAxis);
   var moleculeNormals = new THREE.FaceNormalsHelper( tetra, radius * 0.5);
-  moleculeAxis.visible = showAxes;
+  moleculeNormals.visible = showAxes;
   rotateGroup.add(moleculeNormals);
   helpers.push(moleculeAxis, moleculeNormals);
 
