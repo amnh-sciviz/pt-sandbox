@@ -71,10 +71,11 @@ function addMolecule(){
   }
 
   // add Mg
-  var mg1 = getSphere(radius * 0.125, 0x306090);
-  var mg2 = getSphere(radius * 0.125, 0x306090);
-  mg1.translateOnAxis(tetraGeometry.faces[0].normal, radius);
-  mg2.translateOnAxis(tetraGeometry.faces[1].normal, radius);
+  var mgr = radius * 0.125;
+  var mg1 = getSphere(mgr, 0x306090);
+  var mg2 = getSphere(mgr, 0x306090);
+  mg1.translateOnAxis(tetraGeometry.faces[0].normal, radius + mgr*0.75);
+  mg2.translateOnAxis(tetraGeometry.faces[1].normal, radius + mgr*0.75);
   rotateGroup.add(mg1);
   rotateGroup.add(mg2);
 
@@ -121,7 +122,8 @@ function addMolecule(){
     var yourPosition = new THREE.Vector3(0, 0, 0);
     myPosition = moleculeGroup.getWorldPosition(myPosition);
     for (var i=0; i<molecules.length; i++){
-      if (molecules[i].getWorldPosition(yourPosition).equals(myPosition)) {
+      if (molecules[i].getWorldPosition(yourPosition).distanceTo(myPosition) < radius) {
+        // console.log("Found.")
         found = true;
         break;
       }
