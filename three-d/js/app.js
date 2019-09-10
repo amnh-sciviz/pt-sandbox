@@ -2,8 +2,10 @@ var winW = window.innerWidth;
 var winH = window.innerHeight;
 
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(50, winW / winH, 0.01, 1000);
-var radius = 4;
+//var camera = new THREE.PerspectiveCamera(50, winW / winH, 0.01, 1000);
+// var radius = 4;
+var camera = new THREE.OrthographicCamera( winW / - 2, winW / 2, winH / 2, winH / - 2, 1, 2000 );
+var radius = 200;
 var currentIndex = -1;
 var currentFaceIndex = -1;
 var showAxes = false;
