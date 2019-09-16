@@ -4,13 +4,16 @@ var winH = window.innerHeight;
 var scene = new THREE.Scene();
 //var camera = new THREE.PerspectiveCamera(50, winW / winH, 0.01, 1000);
 // var radius = 4;
-var camera = new THREE.OrthographicCamera( winW / - 2, winW / 2, winH / 2, winH / - 2, 0.1, 20000 );
+var camera = new THREE.OrthographicCamera( winW / - 2, winW / 2, winH / 2, winH / - 2, 0.1, 10000 );
 var radius = 200;
 var side = radius * 3 / Math.sqrt(3);
 var height = Math.sqrt(3) / 2 * side;
 var showAxes = false;
+var transitionMs = 1000;
 var molecules = [];
+var timestamps = [];
 var helpers = [];
+var sound = new Howl({ src: ['../shared/audio/woodblock.mp3'] });
 
 // for moving in a spiral
 var index = 0;
@@ -29,6 +32,12 @@ camera.lookAt(origin);
 
 function radians(degrees){
   return degrees * (Math.PI/180);
+}
+
+function easeInElastic(t){
+  if (t <= 0) return 0;
+  else if (t >= 1) return 1;
+  return (.04 - .04 / t) * Math.sin(25 * t) + 1;
 }
 
 function getCentroid(v1, v2, v3){
@@ -106,6 +115,7 @@ function addMolecule(){
   if (isOdd) {
     moleculeGroup.rotateX(radians(-175));
     moleculeGroup.translateY(-radius/2);
+    // moleculeGroup.translateZ(-radius/2);
   } else {
     moleculeGroup.rotateX(radians(-5));
   }
@@ -133,6 +143,8 @@ function addMolecule(){
 
   molecules.push(moleculeGroup);
   scene.add(moleculeGroup);
+  timestamps.push(new Date().getTime());
+  sound.play();
 
 }
 
@@ -168,7 +180,20 @@ function toggleAxis(){
 
 // the main loop
 var render = function () {
+
+    // bounce in
+    var now = new Date().getTime();
+    for (var i=0; i<timestamps.length; i++) {
+      var t = timestamps[i];
+      var timeSince = now - t;
+      if (timeSince <= transitionMs) {
+        var scale = easeInElastic(timeSince / transitionMs);
+        molecules[i].scale.set(scale, scale, scale);
+      }
+    }
+
     renderer.render(scene, camera);
+
     requestAnimationFrame(render);
 };
 render();
