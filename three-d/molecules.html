@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Periodic Table Sandbox - 3D Test</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../shared/css/vendor/normalize.css">
+  <link rel="stylesheet" href="../shared/css/base.css">
+
+  <style type="text/css">
+    body {
+      overflow: hidden;
+    }
+    button {
+      border: none;
+      background: #306090;
+      color: #fff;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      font-size: 2rem;
+    }
+    button:hover {
+      background: #4981b9;
+    }
+    #axis {
+      left: auto;
+      right: 0;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <button id="add" onClick="javascript:addMolecule();">Add molecule</button>
+  <button id="axis" onClick="javascript:toggleAxis();">Toggle axis</button>
+
+  <script src="../shared/js/vendor/three.min.js"></script>
+  <script src="../shared/js/vendor/OrbitControls.js"></script>
+  <script src="../shared/js/vendor/howler.min.js"></script>
+  <script src="js/molecules.js"></script>
+</body>
+
+</html>

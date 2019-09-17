@@ -5,12 +5,14 @@ var scene = new THREE.Scene();
 //var camera = new THREE.PerspectiveCamera(50, winW / winH, 0.01, 1000);
 // var radius = 4;
 var camera = new THREE.OrthographicCamera( winW / - 2, winW / 2, winH / 2, winH / - 2, 0.1, 10000 );
-var radius = 200;
+var radius = 60;
+var mradius = 40;
 var side = radius * 3 / Math.sqrt(3);
 var height = Math.sqrt(3) / 2 * side;
 var showAxes = false;
 var transitionMs = 1000;
 var molecules = [];
+var objects = [];
 var timestamps = [];
 var helpers = [];
 var sound = new Howl({ src: ['../shared/audio/woodblock.mp3'] });
@@ -46,13 +48,47 @@ function getCentroid(v1, v2, v3){
   position.y = ( v1.y + v2.y + v3.y ) / 3;
   position.z = ( v1.z + v2.z + v3.z ) / 3;
   return position;
-};
+}
 
-function getSphere(radius, color){
+function getSprite(label) {
+  var d = 512;
+  // var spriteAlignment = THREE.SpriteAlignment.topLeft;
+  var canvas = document.createElement('canvas');
+  canvas.width = d;
+  canvas.height = d;
+  var context = canvas.getContext('2d');
+  // context.fillStyle = "rgba(255, 0, 0, 1.0)";
+  // context.fillRect(0, 0, d, d)
+  context.font = '64px sans-serif';
+  context.fillStyle = "rgba(255, 255, 255, 1.0)";
+  // get size data (height depends only on font size)
+  var metrics = context.measureText(label);
+  var textWidth = metrics.width;
+  context.fillText(label, d/2-textWidth/2, d/2+textWidth/4);
+  // canvas contents will be used for a texture
+  var texture = new THREE.CanvasTexture(canvas);
+  var spriteMaterial = new THREE.SpriteMaterial({
+    map: texture,
+    color: 0xffffff
+    // useScreenCoordinates: false,
+    // alignment: spriteAlignment
+  });
+  var sprite = new THREE.Sprite(spriteMaterial);
+  sprite.name = "label";
+  return sprite;
+}
+
+function getSphere(radius, color, label, isOdd){
+  var group = new THREE.Group();
   var geometry = new THREE.SphereGeometry(radius, 32, 32 );
   var material = new THREE.MeshPhongMaterial( {color: color} );
   var sphere = new THREE.Mesh(geometry, material);
-  return sphere;
+  var sprite = getSprite(label);
+  var z = isOdd ? -radius*1.5 : radius*1.5;
+  sprite.position.set(0, 0, z);
+  sprite.scale.set(200, 200, 1);
+  group.add(sphere, sprite);
+  return group;
 }
 
 function getTetra(radius, color){
@@ -77,72 +113,81 @@ function getTetra(radius, color){
 }
 
 function addMolecule(){
-  var moleculeGroup = new THREE.Group();
+  var moleculeGroup;
+  var mindex = index % 7;
+  var gindex = parseInt(index / 7);
+  var isOdd = gindex % 2 > 0;
 
-  // add tetrahedral
-  var tetra = getTetra(radius, 0xdfba52);
-  var tvertices = tetra.geometry.vertices;
-  tetra.name = 'tetra';
-  moleculeGroup.add(tetra);
-
-  // add silicon
-  var si = getSphere(radius * 0.2, 0x7a9b8a);
-  moleculeGroup.add(si);
-
-  // add oxygen
-  var o;
-  var colors = [0xff0000, 0x00ff00, 0x0000ff, 0x00ffff];
-  for(var i=0; i<tvertices.length; i++){
-    // var color = showAxes ? colors[i] : 0xd3aa58;
-    // o = getSphere(radius * 0.15, color);
-    o = getSphere(radius * 0.15, 0xd3aa58);
-    o.position.copy(tvertices[i]);
-    moleculeGroup.add(o);
-  }
-
-  var isOdd = index % 2 > 0;
-
-  // add Mg
-  var faceIndex1 = isOdd ? 2 : 0;
-  var faceIndex2 = 3;
-  var mgr = radius * 0.125;
-  var mg1 = getSphere(mgr, 0x306090);
-  var mg2 = getSphere(mgr, 0x306090);
-  mg1.translateOnAxis(tetra.geometry.faces[faceIndex1].normal, radius);
-  mg2.translateOnAxis(tetra.geometry.faces[faceIndex2].normal, radius);
-  moleculeGroup.add(mg1, mg2);
-
-  if (isOdd) {
-    moleculeGroup.rotateX(radians(-175));
-    moleculeGroup.translateY(-radius/2);
-    // moleculeGroup.translateZ(-radius/2);
+  // a new molecule
+  if (mindex === 0) {
+    moleculeGroup = new THREE.Group();
+  // existing molecule
   } else {
-    moleculeGroup.rotateX(radians(-5));
+    moleculeGroup = molecules[gindex];
   }
 
-  moleculeGroup.translateX(height*3/2*x);
-  moleculeGroup.translateY(height*3/2*y);
+  // Si
+  if (mindex === 0) {
+    var si = getSphere(mradius, 0x7a9b8a, "Si", isOdd);
+    moleculeGroup.add(si);
+    objects.push(si);
+
+  // O
+  } else if (mindex >= 1 && mindex <= 4) {
+    var o = getSphere(mradius*0.75, 0xd3aa58, "O", isOdd);
+    if (mindex === 1) o.position.set(-side/2,  -radius/2, -side/3);
+    else if (mindex === 2) o.position.set(0, -radius/2, height*2/3);
+    else if (mindex === 3) o.position.set(side/2, -radius/2, -height/3);
+    else o.position.set(0, radius, 0);
+    moleculeGroup.add(o);
+    objects.push(o);
+
+    // add tetrahedral
+    if (mindex === 4) {
+      var tetra = getTetra(radius, 0xdfba52);
+      tetra.name = 'tetra';
+      tetra.visible = false;
+      moleculeGroup.add(tetra);
+    }
+
+  // Mg
+  } else {
+    var refTetra = moleculeGroup.getObjectByName('tetra');
+    var mg = getSphere(mradius * 0.625, 0x306090, "Mg", isOdd);
+    var faceIndex = isOdd ? 2 : 0;
+    if (mindex === 6) faceIndex = 3;
+    mg.translateOnAxis(refTetra.geometry.faces[faceIndex].normal, radius*1.5);
+    moleculeGroup.add(mg);
+    objects.push(mg);
+  }
+
+  if (mindex === 0) {
+    if (isOdd) {
+      moleculeGroup.rotateX(radians(-180));
+      // moleculeGroup.translateY(-radius/2);
+      // moleculeGroup.translateZ(-radius/2);
+    } else {
+      // moleculeGroup.rotateX(radians(-5));
+    }
+    moleculeGroup.translateX(height*2*x);
+    moleculeGroup.translateY(height*2*y);
+    molecules.push(moleculeGroup);
+    scene.add(moleculeGroup);
+  }
 
   // step in a spiral
-  if (x === y || (x < 0 && x === -y) || (x > 0 && x === 1-y)) {
-      // change direction
-      delta = [-delta[1], delta[0]];
+  if (mindex === 6) {
+    if (x === y || (x < 0 && x === -y) || (x > 0 && x === 1-y)) {
+        // change direction
+        delta = [-delta[1], delta[0]];
+    }
+    x += delta[0];
+    y += delta[1];
   }
-  x += delta[0];
-  y += delta[1];
+
   index++;
 
-  // helper
-  var moleculeAxis = new THREE.AxesHelper(radius*2);
-  moleculeAxis.visible = showAxes;
-  moleculeGroup.add(moleculeAxis);
-  var moleculeNormals = new THREE.FaceNormalsHelper(tetra, radius * 0.5);
-  moleculeNormals.visible = showAxes;
-  moleculeGroup.add(moleculeNormals);
-  helpers.push(moleculeAxis, moleculeNormals);
 
-  molecules.push(moleculeGroup);
-  scene.add(moleculeGroup);
   timestamps.push(new Date().getTime());
   sound.play();
 
@@ -189,7 +234,7 @@ var render = function () {
       if (timeSince <= transitionMs) {
         var scale = easeInElastic(timeSince / transitionMs);
         scale = Math.max(scale, 0.0000001);
-        molecules[i].scale.set(scale, scale, scale);
+        objects[i].scale.set(scale, scale, scale);
       }
     }
 
