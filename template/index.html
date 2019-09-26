@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Periodic Table Sandbox - Build from template</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../shared/css/vendor/normalize.css">
+  <link rel="stylesheet" href="../shared/css/base.css">
+  <link rel="stylesheet" href="css/app.css">
+
+</head>
+
+<body>
+  <div id="canvas" class="canvas"></div>
+  <div id="toolbar" class="toolbar"></div>
+
+  <div id="templates" class="templates">
+    <!-- Oxygen -->
+    <div id="O" class="template">
+      <div class="atom non-metal O">
+        <div class="nucleus">O</div>
+        <div class="shell visible-on-select">
+          <div class="electrons valence">
+            <div class="e tl"></div><div class="e tr"></div>
+            <div class="e lt"></div><div class="e lb"></div>
+            <div class="e bm"></div>
+            <div class="e rt gain share"></div>
+            <div class="e rb lose share"></div>
+          </div>
+        </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Silicon -->
+    <div id="Si" class="template">
+      <div class="atom semi-metal Si">
+        <div class="nucleus">Si</div>
+        <div class="shell visible-on-select">
+          <div class="electrons valence">
+            <div class="e tm"></div><div class="e bm"></div>
+            <div class="e lt lose share"></div>
+            <div class="e lb gain share"></div>
+            <div class="e rt gain share"></div>
+            <div class="e rb lose share"></div>
+          </div>
+        </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tl"></div><div class="e tr"></div>
+              <div class="e bl"></div><div class="e br"></div>
+              <div class="e lt"></div><div class="e lb"></div>
+              <div class="e rt"></div><div class="e rb"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aluminum ion -->
+    <div id="Al" class="template">
+      <div class="atom metal Al">
+        <div class="charge invisible-on-select"><span>3+</span></div>
+        <div class="nucleus">Al</div>
+        <div class="shell visible-on-select">
+          <div class="electrons valence">
+            <div class="e tm"></div>
+            <div class="e lb"></div><div class="e rb"></div>
+          </div>
+        </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tl"></div><div class="e tr"></div>
+              <div class="e bl"></div><div class="e br"></div>
+              <div class="e lt"></div><div class="e lb"></div>
+              <div class="e rt"></div><div class="e rb"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Beryllium ion -->
+    <div id="Be" class="template">
+      <div class="atom metal Be">
+        <div class="charge invisible-on-select"><span>2+</span></div>
+        <div class="nucleus">Be</div>
+        <div class="shell visible-on-select">
+          <div class="electrons valence">
+            <div class="e lm"></div>
+            <div class="e rm"></div>
+          </div>
+        </div>
+        <div class="inner-shells visible-on-select">
+          <div class="shell">
+            <div class="electrons">
+              <div class="e tm"></div><div class="e bm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SiO -->
+    <div id="SiO" class="template">
+      <div class="molecule SiO tetra">
+        <div class="atoms">
+          <div class="atom non-metal O tetra-top ghost">
+            <div class="nucleus">O</div>
+            <div class="bond"></div>
+          </div>
+          <div class="atom semi-metal Si tetra-center">
+            <div class="nucleus">Si</div>
+          </div>
+          <div class="atom non-metal O tetra-left">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-right ghost">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-bottom ghost">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+        </div>
+        <div class="formula">
+          <span>Si</span>
+          <span>O</span>
+          <span class="active"><sub>4</sub></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SiO2 -->
+    <div id="SiO2" class="template">
+      <div class="molecule SiO2 tetra">
+        <div class="atoms">
+          <div class="atom non-metal O tetra-top ghost">
+            <div class="nucleus">O</div>
+            <div class="bond"></div>
+          </div>
+          <div class="atom semi-metal Si tetra-center">
+            <div class="nucleus">Si</div>
+          </div>
+          <div class="atom non-metal O tetra-left">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-right">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-bottom ghost">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+        </div>
+        <div class="formula">
+          <span>Si</span>
+          <span>O</span>
+          <span class="active"><sub>4</sub></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SiO3 -->
+    <div id="SiO3" class="template">
+      <div class="molecule SiO3 tetra">
+        <div class="atoms">
+          <div class="atom non-metal O tetra-top">
+            <div class="nucleus">O</div>
+            <div class="bond"></div>
+          </div>
+          <div class="atom semi-metal Si tetra-center">
+            <div class="nucleus">Si</div>
+          </div>
+          <div class="atom non-metal O tetra-left">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-right">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-bottom ghost">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+        </div>
+        <div class="formula">
+          <span>Si</span>
+          <span>O</span>
+          <span class="active"><sub>4</sub></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SiO4 -->
+    <div id="SiO4" class="template">
+      <div class="molecule SiO4 tetra">
+        <div class="charge"><span>4-</span></div>
+        <div class="atoms">
+          <div class="atom non-metal O tetra-top">
+            <div class="nucleus">O</div>
+            <div class="bond"></div>
+          </div>
+          <div class="atom semi-metal Si tetra-center">
+            <div class="nucleus">Si</div>
+          </div>
+          <div class="atom non-metal O tetra-left">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-right">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+          <div class="atom non-metal O tetra-bottom">
+            <div class="bond"></div>
+            <div class="nucleus">O</div>
+          </div>
+        </div>
+        <div class="formula">
+          <span>Si</span>
+          <span>O</span>
+          <span><sub>4</sub></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/js/vendor/jquery-3.4.1.min.js"></script>
+  <script src="../shared/js/vendor/underscore-min.js"></script>
+  <script src="../shared/js/vendor/hammer.min.js"></script>
+  <script src="../shared/js/vendor/phaser.min.js"></script>
+  <script src="../shared/js/vendor/howler.min.js"></script>
+  <script src="../shared/js/sound.js"></script>
+
+  <script src="js/body.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
