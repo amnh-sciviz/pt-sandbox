@@ -91,6 +91,8 @@
       "type": "compound compound4",
       "shape": "rectangle",
       "weight": 0.4,
+      "playSound": "successSound",
+      "playDelay": 1000,
       "physicalProperties": {
         "density": 0.7
       }

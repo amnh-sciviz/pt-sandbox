@@ -351,7 +351,6 @@
 .label span,
 .formula span {
   display: inline-block;
-  margin: 0 -1px;
 }
 .formula .active {
   animation: pulse 2s infinite linear;
@@ -442,6 +441,73 @@
   background: var(--color-halogen);
 }
 
+.tetrahedron,
+.tetrahedron svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform-origin: 50% 50%;
+}
+.tetrahedron {
+  width: 50%;
+  height: 50%;
+  top: 50%;
+  left: 50%;
+  margin-left: -25%;
+  margin-top: -25%;
+}
+.tetrahedron svg {
+  overflow: visible;
+}
+.tetrahedron .pulse-bg {
+  fill: #222;
+  transform-origin: 50% 66.67%;
+  animation: charge-small 4s infinite ease-in-out;
+}
+.tetrahedron .bg {
+  fill: #a98448;
+}
+.tetrahedron .bottom {
+  fill: #e0ba52;
+}
+.tetrahedron .right {
+  fill: #bf9a50;
+}
+.tetrahedron .tetrahedron-charge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 2rem;
+}
+
+.tetra.SiO4 .atoms {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  animation: zoomOut 0.2s;
+  animation-delay: 1s;
+  animation-fill-mode: both;
+}
+.tetra.SiO4 .tetrahedron {
+  animation: bounceIn 1s;
+  animation-delay: 1s;
+  animation-fill-mode: both;
+}
+.tetra.SiO4.selected .atoms {
+  animation: bounceIn 1s;
+  animation-delay: 0;
+  animation-fill-mode: both;
+}
+.tetra.SiO4.selected .tetrahedron {
+  animation: zoomOut 0.2s;
+  animation-delay: 0;
+  animation-fill-mode: both;
+}
+
 @keyframes bounceIn {
   from,
   20%,
@@ -504,6 +570,17 @@
 
   50% {
     transform: scale3d(2, 2, 2);
+    opacity: 1;
+  }
+}
+@keyframes charge-small {
+  from, to {
+    transform: scale3d(1.25, 1.25, 1.25);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale3d(1.5, 1.5, 1.5);
     opacity: 1;
   }
 }
@@ -600,5 +677,33 @@
 
   to {
     transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0.6, 0.6, 0.6);
+    transform: scale3d(0.6, 0.6, 0.6);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+
+  50% {
+    opacity: 0;
+    transform: scale3d(0.6, 0.6, 0.6);
+  }
+
+  to {
+    opacity: 0;
   }
 }

@@ -121,9 +121,12 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.loadSounds = function(){
-    if (opt.makeSound) this.makeSound = new Sound(opt.makeSound);
-    if (opt.breakSound) this.breakSound = new Sound(opt.breakSound);
-    if (opt.collideSound) this.collideSound = new Sound(opt.collideSound);
+    var sounds = {};
+    var soundKeys = ["makeSound", "buildSound", "successSound", "clickSound"];
+    _.each(soundKeys, function(k){
+      if (opt[k]) sounds[k] = new Sound(opt[k]);
+    });
+    this.sounds = sounds;
   };
 
   MakeBreakApp.prototype.onCollision = function(matterBodyA, matterBodyB) {
@@ -156,7 +159,12 @@ var MakeBreakApp = (function() {
       this.bodies = _.omit(this.bodies, idA, idB);
       // add new body
       this.bodies[newBody.id] = newBody;
-      this.makeSound && this.makeSound.playPercent(1.0-newBody.getWeight());
+      this.sounds["makeSound"].playPercent(1.0-newBody.getWeight());
+      // play custom sound
+      if (newBody.opt.playSound && this.sounds[newBody.opt.playSound]) {
+        var delay = newBody.opt.playDelay || 0;
+        setTimeout(function(){_this.sounds[newBody.opt.playSound].playSprite("default")}, delay);
+      }
       return;
     }
 
@@ -168,11 +176,11 @@ var MakeBreakApp = (function() {
       _.each(newBodies, function(body){
         _this.bodies[body.id] = body;
       });
-      this.breakSound && this.breakSound.playSprite("break");
+      // this.breakSound && this.breakSound.playSprite("break");
       return;
     }
 
-    this.collideSound && this.collideSound.playSprite("collide");
+    // this.collideSound && this.collideSound.playSprite("collide");
 
   };
 

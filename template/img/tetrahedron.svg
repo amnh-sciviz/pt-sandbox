@@ -1,0 +1,28 @@
+<svg class="tetrahedron-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+  <defs>
+    <style>
+      .pulse-bg {
+        fill: #222;
+      }
+
+      .bg {
+        fill: #a98448;
+      }
+
+      .bottom {
+        fill: #e0ba52;
+      }
+
+      .right {
+        fill: #bf9a50;
+      }
+    </style>
+  </defs>
+  <title>tetrahedron</title>
+  <g>
+    <polygon class="pulse-bg" points="50 0 0 86.6 100 86.6 50 0"/>
+    <polygon class="bg" points="50.09 13.24 11.45 80.16 88.72 80.16 50.09 13.24"/>
+    <polygon class="bottom" points="11.38 80.34 50.03 57.44 88.68 80.34 11.38 80.34"/>
+    <polygon class="right" points="50.21 13.24 50.21 57.62 88.86 80.52 50.21 13.24"/>
+  </g>
+</svg>

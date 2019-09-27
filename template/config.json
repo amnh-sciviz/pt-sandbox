@@ -35,7 +35,7 @@
     "limitLastPlayedMs": 50,
     "limitSameLastPlayedMs": 200,
     "sprites": {
-      "build": [0, 500]
+      "default": [0, 500]
     }
   },
   "successSound": {
@@ -45,7 +45,7 @@
     "limitLastPlayedMs": 50,
     "limitSameLastPlayedMs": 200,
     "sprites": {
-      "success": [0, 1718]
+      "default": [0, 1718]
     }
   },
   "clickSound": {
@@ -55,7 +55,7 @@
     "limitLastPlayedMs": 50,
     "limitSameLastPlayedMs": 200,
     "sprites": {
-      "click": [0, 281]
+      "default": [0, 281]
     }
   }
 }
