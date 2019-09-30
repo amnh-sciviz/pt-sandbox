@@ -308,7 +308,7 @@ var Body = (function() {
       var t = e.type;
       if (t==="panstart") _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
       else if (t==="panmove") _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
-      else if (t==="panmove") _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
+      else if (t==="panend") _this.onDragEnd(e.center.x, e.center.y, new Date().getTime());
       else if (_this.canScale && t==="pinchstart") _this.onPinchStart();
       else if (_this.canScale && t==="pinchmove") _this.onPinchMove(e.scale);
       else if (_this.canScale && t==="pinchend") _this.onPinchEnd();

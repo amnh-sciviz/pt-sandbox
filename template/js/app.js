@@ -23,12 +23,72 @@ var MakeBreakApp = (function() {
     this.init();
   }
 
+  function combineFormulas(f1, f2){
+    var result = [];
+    var ids = _.union(_.pluck(f1, "id"), _.pluck(f2, "id"));
+    var f1Lookup = _.object(_.map(f1, function(f){ return [f.id, f.count]; }));
+    var f2Lookup = _.object(_.map(f2, function(f){ return [f.id, f.count]; }));
+    _.each(ids, function(id){
+      var v1 = _.has(f1Lookup, id) ? f1Lookup[id]: 0;
+      var v2 = _.has(f2Lookup, id) ? f2Lookup[id]: 0;
+      result.push({"id": id, "count": v1+v2});
+    });
+    return result;
+  }
+
+  function formulaToHtml(formula){
+    var html = '';
+    _.each(formula, function(v){
+      html += v.id + '<sub>' + v.count + '</sub>';
+    });
+    return html;
+  }
+
+  function formulaStringToHtml(str){
+    var formula = parseFormulaString(str);
+    return formulaToHtml(formula);
+  }
+
+  function isUpper(c){
+    return c == c.toUpperCase();
+  }
+
+  function parseFormulaString(str) {
+    var numStr = '';
+    var letStr = '';
+    var values = [];
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charAt(i);
+      // this is a number, just add to previous number string
+      if (c >= '0' && c <= '9') {
+        numStr += c;
+
+      // this is a uppercase letter; add previous
+      } else if (isUpper(c)) {
+        if (i > 0) values.push({"id": letStr, "count": numStr.length > 0 ? parseInt(numStr) : 1 });
+        numStr = '';
+        letStr = c;
+
+      // this is a lowercase letter, just add to previous letter string
+      } else {
+        letStr += c;
+      }
+    }
+    // add last
+    values.push({"id": letStr, "count": numStr.length > 0 ? parseInt(numStr) : 1 });
+    return values;
+  }
+
   MakeBreakApp.prototype.init = function(){
+    var _this = this;
     app = this;
     $canvas = $(opt.el);
     $toolbar = $("#toolbar");
     w = $canvas.width();
     h = $canvas.height();
+
+    this.currentFormula = [];
+    this.currentCharge = 0;
 
     objects = [];
     physicalProperties = _.clone(opt.physicalProperties);
@@ -45,7 +105,10 @@ var MakeBreakApp = (function() {
       console.log('Config and content loaded.');
       app.loadGame();
       app.loadSounds();
+      app.loadUI();
     });
+
+
   };
 
   MakeBreakApp.prototype.addObject = function(props) {
@@ -129,6 +192,15 @@ var MakeBreakApp = (function() {
     this.sounds = sounds;
   };
 
+  MakeBreakApp.prototype.loadUI = function(){
+    var targetFormula = opt.targetFormula;
+    this.targetFormula = parseFormulaString(targetFormula);
+    var html = formulaStringToHtml(targetFormula);
+    $('#status-target').html(html);
+    this.$formulaCurrent = $('#status-current');
+    this.$chargeCurrent = $('#status-charge');
+  };
+
   MakeBreakApp.prototype.onCollision = function(matterBodyA, matterBodyB) {
     var _this = this;
     var idA = matterBodyA.label;
@@ -138,13 +210,17 @@ var MakeBreakApp = (function() {
 
     if (bodyA === undefined || bodyB === undefined) return;
 
-    // check for environment
-    if (bodyA.isEnvironment()) {
-      bodyB.onEnvironmentEnter(bodyA);
+    // check for droppable
+    if (bodyA.isDroppable()) {
+      console.log('droppable a')
+      var dropped = bodyB.onDroppableEnter(bodyA);
+      if (dropped) this.onDrop(bodyB, bodyA)
       return;
     }
-    if (bodyB.isEnvironment()) {
-      bodyA.onEnvironmentEnter(bodyB);
+    if (bodyB.isDroppable()) {
+      console.log('droppable b')
+      var dropped = bodyA.onDroppableEnter(bodyB);
+      if (dropped) this.onDrop(bodyA, bodyB)
       return;
     }
 
@@ -192,20 +268,53 @@ var MakeBreakApp = (function() {
 
     if (bodyA === undefined || bodyB === undefined) return;
 
-    // check for environment
-    if (bodyA.isEnvironment()) {
-      bodyB.onEnvironmentLeave(bodyA);
+    // check for droppable
+    if (bodyA.isDroppable()) {
+      bodyB.onDroppableLeave(bodyA);
       return;
     }
-    if (bodyB.isEnvironment()) {
-      bodyA.onEnvironmentLeave(bodyB);
+    if (bodyB.isDroppable()) {
+      bodyA.onDroppableLeave(bodyB);
       return;
+    }
+  };
+
+  MakeBreakApp.prototype.onDrop = function(dropSrc, dropTarget){
+    var formulaStr = dropSrc.opt.addFormula ? dropSrc.opt.addFormula : dropSrc.reactId;
+    var formula = parseFormulaString(formulaStr);
+    this.currentFormula = combineFormulas(this.currentFormula, formula);
+    var lookup = _.object(_.map(this.currentFormula, function(f){ return [f.id, f.count]; }));
+    var html = '';
+    _.each(this.targetFormula, function(f){
+      if (_.has(lookup, f.id)) html += f.id + '<sub>' + lookup[f.id] + '</sub>';
+      else html += '<span style="visibility: hidden">' + f.id + '<sub>' + f.count + '</sub></span>';
+    });
+    this.$formulaCurrent.html(html);
+    $('.status').addClass('active');
+    this.sounds["clickSound"].playSprite("default");
+
+    this.currentCharge += dropSrc.opt.charge;
+    var chargeStr = Math.abs(this.currentCharge);
+    if (this.currentCharge > 0) chargeStr += "+";
+    else if (this.currentCharge < 0) chargeStr += "-";
+    else chargeStr = "";
+    this.$chargeCurrent.text(chargeStr);
+
+    // check for success
+    var targetLookup = _.object(_.map(this.targetFormula, function(f){ return [f.id, f.count]; }));
+    if (_.isEqual(lookup, targetLookup)) {
+      setTimeout(function(){
+        app.onSuccess();
+      }, 2000);
     }
   };
 
   MakeBreakApp.prototype.onGameCreate = function(_game){
     game = _game;
     game.matter.world.setBounds(0, 0, w, h);
+
+    var cx = w * 0.5;
+    var cy = h * 0.75;
 
     $domContainer = $canvas.children('div').first();
     if (!$domContainer.length) console.log("Could not find DOM container!");
@@ -215,14 +324,17 @@ var MakeBreakApp = (function() {
       if (count && count > 0) {
         _.times(count, function(i){
           var obj = _.clone(props);
-          if (obj.type === "environment") {
-            obj.width = w * obj.rw;
-            obj.height = h * obj.rh;
-            obj.x = w * 0.5;
-            obj.y = h - obj.height * 0.5;
-          } else {
-            obj.y = Phaser.Math.Between(h*0.05, h*0.5);
-          }
+          // if (obj.type === "droppable") {
+          //   obj.width = w * obj.rw;
+          //   obj.height = h * obj.rh;
+          //   obj.x = w * 0.5;
+          //   obj.y = h - obj.height * 0.5;
+          // } else {
+          //   obj.y = Phaser.Math.Between(h*0.05, h*0.5);
+          // }
+          obj.x = obj.rx ? cx + obj.width * obj.rx : cx;
+          obj.y = obj.ry ? cy + obj.height * obj.ry : cy;
+          obj = _.omit(obj, ['width', 'height', 'rw', 'rh', 'rx', 'ry']);
           app.addObject(obj, count);
         });
       }
@@ -250,6 +362,10 @@ var MakeBreakApp = (function() {
     _.each(this.bodies, function(body, id){
       body.update(physicalProperties);
     });
+  };
+
+  MakeBreakApp.prototype.onSuccess = function(){
+    alert("Success!");
   };
 
   MakeBreakApp.prototype.parseObjects = function(propList){

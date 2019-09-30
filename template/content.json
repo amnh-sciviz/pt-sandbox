@@ -10,7 +10,9 @@
       },
       "reactsWith": {
         "Si": "SiO",
-        "SiO": "SiO2"
+        "SiO": "SiO2",
+        "SiO2": "SiO3",
+        "SiO3": "SiO4"
       },
       "maxCount": 12,
       "connectAngles": {
@@ -37,8 +39,10 @@
       "physicalProperties": {
         "density": 0.001
       },
+      "charge": 3,
       "reactsWith": {},
-      "maxCount": 12
+      "maxCount": 12,
+      "droppable": ["m1-target", "m2-target"]
     },{
       "id": "Be",
       "label": "Beryllium",
@@ -47,8 +51,10 @@
       "physicalProperties": {
         "density": 0.001
       },
+      "charge": 2,
       "reactsWith": {},
-      "maxCount": 12
+      "maxCount": 12,
+      "droppable": ["m3-target", "m4-target", "m5-target"]
     },{
       "id": "SiO",
       "label": "SiO",
@@ -93,9 +99,188 @@
       "weight": 0.4,
       "playSound": "successSound",
       "playDelay": 1000,
+      "addFormula": "SiO3",
+      "charge": -2,
       "physicalProperties": {
         "density": 0.7
-      }
+      },
+      "droppable": ["t1-target", "t2-target", "t3-target", "t4-target", "t5-target", "t6-target"]
+    },{
+      "id": "t1-target",
+      "label": "Tetrahedron target",
+      "text": "Tetrahedron target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 100,
+      "height": 86.6,
+      "rx": 0,
+      "ry": -1.8,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "t2-target",
+      "label": "Tetrahedron target",
+      "text": "Tetrahedron target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 100,
+      "height": 86.6,
+      "rx": -0.9,
+      "ry": -0.8,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "t3-target",
+      "label": "Tetrahedron target",
+      "text": "Tetrahedron target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 100,
+      "height": 86.6,
+      "rx": 0.9,
+      "ry": -0.8,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "t4-target",
+      "label": "Tetrahedron target",
+      "text": "Tetrahedron target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 100,
+      "height": 86.6,
+      "rx": -0.9,
+      "ry": 0,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "t5-target",
+      "label": "Tetrahedron target",
+      "text": "Tetrahedron target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 100,
+      "height": 86.6,
+      "rx": 0.9,
+      "ry": 0,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "t6-target",
+      "label": "Tetrahedron target",
+      "text": "Tetrahedron target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 100,
+      "height": 86.6,
+      "rx": 0,
+      "ry": 1,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "m1-target",
+      "label": "Metal ion target",
+      "text": "Metal ion target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 50,
+      "height": 50,
+      "rx": -1.5,
+      "ry": -3.2,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "m2-target",
+      "label": "Metal ion target",
+      "text": "Metal ion target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 50,
+      "height": 50,
+      "rx": 1.5,
+      "ry": -3.2,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "m3-target",
+      "label": "Metal ion target",
+      "text": "Metal ion target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 50,
+      "height": 50,
+      "rx": -2.75,
+      "ry": -0.75,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "m4-target",
+      "label": "Metal ion target",
+      "text": "Metal ion target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 50,
+      "height": 50,
+      "rx": 2.75,
+      "ry": -0.75,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
+    },{
+      "id": "m5-target",
+      "label": "Metal ion target",
+      "text": "Metal ion target",
+      "type": "droppable",
+      "shape": "rectangle",
+      "width": 50,
+      "height": 50,
+      "rx": -1.5,
+      "ry": 1.75,
+      "physicalProperties": {
+        "isStatic": true,
+        "isSensor": true,
+        "ignorePointer": true
+      },
+      "count": 1
     }
   ]
 }

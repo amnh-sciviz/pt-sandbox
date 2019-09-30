@@ -50,12 +50,13 @@
   },
   "clickSound": {
     "enable": 1,
-    "audio": ["../shared/audio/success.mp3"],
+    "audio": ["../shared/audio/click.mp3"],
     "volume": 1.0,
     "limitLastPlayedMs": 50,
     "limitSameLastPlayedMs": 200,
     "sprites": {
       "default": [0, 281]
     }
-  }
+  },
+  "targetFormula": "Be3Al2Si6O18"
 }

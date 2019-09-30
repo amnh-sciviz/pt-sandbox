@@ -34,12 +34,13 @@ var Body = (function() {
     this.composition = opt.composition;
     this.reactId = opt.id;
     this.bodyType = opt.type;
-    this.environment = "none";
+    this.droppable = "none";
     this.opt = opt;
     this.attractingBody = false;
     this.connectAngles = this.opt.connectAngles ? _.mapObject(this.opt.connectAngles, function(deg, key){ return Phaser.Math.DegToRad(deg); }) : {};
     this.attractAngleStep = this.opt.attractAngleStep;
     this.shellRotation = 0;
+    this.droppableIds = this.opt.droppable || [];
 
     this.create();
     this.loadListeners();
@@ -163,10 +164,10 @@ var Body = (function() {
     // console.log(reactsWith, bodyB.reactId);
     if (reaction === undefined) return false;
 
-    // check to see if this reaction happens in this environment
+    // check to see if this reaction happens in this droppable
     if (_.isObject(reaction)) {
-      var envA = this.environment;
-      var envB = bodyB.environment;
+      var envA = this.droppable;
+      var envB = bodyB.droppable;
       var env = envA !== "none" ? envA : envB;
       if (reaction[env] === undefined) return false;
       reaction = reaction[env];
@@ -247,8 +248,9 @@ var Body = (function() {
     if (_.contains(['circle', 'default'], opt.shape)) el.setCircle();
     // el.applyForce({x: 100, y: 100});
 
-    // make everything render on top of environments
-    if (this.bodyType !== "environment") el.depth = 10;
+    // make everything render on top of droppables
+    if (this.bodyType !== "droppable") el.depth = 10;
+    else el.depth = 5;
 
     el.body.label = id;
     this.$el = $el;
@@ -272,6 +274,7 @@ var Body = (function() {
   };
 
   Body.prototype.destroyBody = function(){
+    $container.attr('data-highlight', "");
     this.inputManager.off(this.opt.supportedEvents);
     this.inputManager.destroy();
     this.el.destroy();
@@ -289,8 +292,8 @@ var Body = (function() {
     return _.has(this.opt.reactsWith, body.reactId);
   };
 
-  Body.prototype.isEnvironment = function(){
-    return this.bodyType === "environment";
+  Body.prototype.isDroppable = function(){
+    return this.bodyType === "droppable";
   };
 
   Body.prototype.isDragging = function(){
@@ -298,6 +301,7 @@ var Body = (function() {
   };
 
   Body.prototype.loadListeners = function(){
+    if (this.isDroppable()) return;
     var _this = this;
     var el = this.$hitArea[0];
     var inputManager = new Hammer(el);
@@ -308,7 +312,7 @@ var Body = (function() {
       var t = e.type;
       if (t==="panstart") _this.onDragStart(e.center.x, e.center.y, new Date().getTime());
       else if (t==="panmove") _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
-      else if (t==="panmove") _this.onDragMove(e.center.x, e.center.y, new Date().getTime());
+      else if (t==="panend") _this.onDragEnd(e.center.x, e.center.y, new Date().getTime());
       else if (_this.canScale && t==="pinchstart") _this.onPinchStart();
       else if (_this.canScale && t==="pinchmove") _this.onPinchMove(e.scale);
       else if (_this.canScale && t==="pinchend") _this.onPinchEnd();
@@ -343,14 +347,18 @@ var Body = (function() {
     // this.touchId = false;
   };
 
-  Body.prototype.onEnvironmentEnter = function(env){
-    this.environment = env.reactId;
-    this.$el.addClass(env.reactId);
+  Body.prototype.onDroppableEnter = function(droppableBody){
+    if (droppableBody.$el.hasClass("dropped") || !_.contains(this.droppableIds, droppableBody.reactId)) return false;
+    droppableBody.$el.addClass("dropped");
+    droppableBody.el.depth = 1;
+    this.$el.addClass("dropped");
+    this.destroyBody();
+    return true;
   };
 
-  Body.prototype.onEnvironmentLeave = function(env){
-    this.environment = "none";
-    this.$el.removeClass(env.reactId);
+  Body.prototype.onDroppableLeave = function(droppableBody){
+    // this.droppable = "none";
+    // this.$el.removeClass(env.reactId);
   };
 
   Body.prototype.onDragEnd = function(x, y, time) {
@@ -359,6 +367,7 @@ var Body = (function() {
     // fling based on velocity
     // console.log(this.velocityX, this.velocityY)
     // console.log(this.el)
+    $container.attr('data-highlight', "");
     this.el.setVelocity(this.velocityX, this.velocityY);
     this.dragging = false;
     this.makeCalm();
@@ -394,6 +403,7 @@ var Body = (function() {
     // console.log(this.el);
     // console.log('start '+this.id+' '+x+', '+y);
     // keep track of touch start time/position
+    $container.attr('data-highlight', this.reactId);
     this.$el.removeClass("selected");
     this.touchStartTime = time;
     this.touchStartPosition = { x: x, y: y };
@@ -407,6 +417,7 @@ var Body = (function() {
     this.velocityX = 0;
     this.velocityY = 0;
     this.dragging = true;
+
   };
 
   Body.prototype.onPinchEnd = function(){

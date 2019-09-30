@@ -17,6 +17,12 @@
   <div id="canvas" class="canvas"></div>
   <div id="toolbar" class="toolbar"></div>
 
+  <div class="status">
+    <div><strong>Current:</strong> <span id="status-current"></span></div>
+    <div><strong>Target:</strong> <span id="status-target"></span></div>
+    <div id="status-charge" class="status-charge"></div>
+  </div>
+
   <div id="templates" class="templates">
     <!-- Oxygen -->
     <div id="O" class="template">
@@ -255,6 +261,161 @@
         <div class="formula">
           <div><span>Si</span><span>O</span><span><sub>4</sub></span></div>
           <div>(silica tetrahedron)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- target tetrahedrons -->
+    <div id="t1-target" class="template">
+      <div class="t1 droppable t">
+        <div class="animatable">
+          <div class="transformable">
+            <svg class="tetrahedron-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+              <title>tetrahedron</title>
+              <g>
+                <polygon class="bg" points="50.09 13.24 11.45 80.16 88.72 80.16 50.09 13.24"/>
+                <polygon class="bottom" points="11.38 80.34 50.03 57.44 88.68 80.34 11.38 80.34"/>
+                <polygon class="right" points="50.21 13.24 50.21 57.62 88.86 80.52 50.21 13.24"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="t2-target" class="template">
+      <div class="t2 droppable t">
+        <div class="animatable">
+          <div class="transformable">
+            <svg class="tetrahedron-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+              <title>tetrahedron</title>
+              <g>
+                <polygon class="bg" points="50.09 13.24 11.45 80.16 88.72 80.16 50.09 13.24"/>
+                <polygon class="bottom" points="11.38 80.34 50.03 57.44 88.68 80.34 11.38 80.34"/>
+                <polygon class="right" points="50.21 13.24 50.21 57.62 88.86 80.52 50.21 13.24"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="t3-target" class="template">
+      <div class="t3 droppable t">
+        <div class="animatable">
+          <div class="transformable">
+            <svg class="tetrahedron-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+              <title>tetrahedron</title>
+              <g>
+                <polygon class="bg" points="50.09 13.24 11.45 80.16 88.72 80.16 50.09 13.24"/>
+                <polygon class="bottom" points="11.38 80.34 50.03 57.44 88.68 80.34 11.38 80.34"/>
+                <polygon class="right" points="50.21 13.24 50.21 57.62 88.86 80.52 50.21 13.24"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="t4-target" class="template">
+      <div class="t4 droppable t">
+        <div class="animatable">
+          <div class="transformable">
+            <svg class="tetrahedron-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+              <title>tetrahedron</title>
+              <g>
+                <polygon class="bg" points="50.09 13.24 11.45 80.16 88.72 80.16 50.09 13.24"/>
+                <polygon class="bottom" points="11.38 80.34 50.03 57.44 88.68 80.34 11.38 80.34"/>
+                <polygon class="right" points="50.21 13.24 50.21 57.62 88.86 80.52 50.21 13.24"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="t5-target" class="template">
+      <div class="t5 droppable t">
+        <div class="animatable">
+          <div class="transformable">
+            <svg class="tetrahedron-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+              <title>tetrahedron</title>
+              <g>
+                <polygon class="bg" points="50.09 13.24 11.45 80.16 88.72 80.16 50.09 13.24"/>
+                <polygon class="bottom" points="11.38 80.34 50.03 57.44 88.68 80.34 11.38 80.34"/>
+                <polygon class="right" points="50.21 13.24 50.21 57.62 88.86 80.52 50.21 13.24"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="t6-target" class="template">
+      <div class="t6 droppable t">
+        <div class="animatable">
+          <div class="transformable">
+            <svg class="tetrahedron-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 86.6">
+              <title>tetrahedron</title>
+              <g>
+                <polygon class="bg" points="50.09 13.24 11.45 80.16 88.72 80.16 50.09 13.24"/>
+                <polygon class="bottom" points="11.38 80.34 50.03 57.44 88.68 80.34 11.38 80.34"/>
+                <polygon class="right" points="50.21 13.24 50.21 57.62 88.86 80.52 50.21 13.24"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- target metal ions -->
+    <div id="m1-target" class="template">
+      <div class="m m1 droppable">
+        <div class="animatable">
+          <div class="transformable">
+            <div class="atom metal Al">
+              <div class="nucleus">Al</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="m2-target" class="template">
+      <div class="m m2 droppable">
+        <div class="animatable">
+          <div class="transformable">
+            <div class="atom metal Al">
+              <div class="nucleus">Al</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="m3-target" class="template">
+      <div class="m m3 droppable">
+        <div class="animatable">
+          <div class="transformable">
+            <div class="atom metal Be">
+              <div class="nucleus">Be</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="m4-target" class="template">
+      <div class="m m4 droppable">
+        <div class="animatable">
+          <div class="transformable">
+            <div class="atom metal Be">
+              <div class="nucleus">Be</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="m5-target" class="template">
+      <div class="m m5 droppable">
+        <div class="animatable">
+          <div class="transformable">
+            <div class="atom metal Be">
+              <div class="nucleus">Be</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

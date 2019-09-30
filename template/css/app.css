@@ -390,6 +390,33 @@
   transform: scale3d(1.2, 1.2, 1.2);
 }
 
+.status {
+  position: absolute;
+  font-size: 2rem;
+  left: calc(50% + 50px);
+  bottom: 8%;
+  color: white;
+}
+.status strong,
+.status span {
+  display: inline-block;
+}
+.status strong {
+  width: 130px;
+}
+.status div:first-child {
+  display: none;
+}
+.status.active div:first-child {
+  display: block;
+  animation: bounceIn 1s ease-in-out;
+}
+.status-charge {
+  position: absolute;
+  right: 200px;
+  top: -250px;
+}
+
 
 .templates {
   display: none;
@@ -461,18 +488,18 @@
 .tetrahedron svg {
   overflow: visible;
 }
-.tetrahedron .pulse-bg {
+.tetrahedron-svg .pulse-bg {
   fill: #222;
   transform-origin: 50% 66.67%;
   animation: charge-small 4s infinite ease-in-out;
 }
-.tetrahedron .bg {
+.tetrahedron-svg .bg {
   fill: #a98448;
 }
-.tetrahedron .bottom {
+.tetrahedron-svg .bottom {
   fill: #e0ba52;
 }
-.tetrahedron .right {
+.tetrahedron-svg .right {
   fill: #bf9a50;
 }
 .tetrahedron .tetrahedron-charge {
@@ -506,6 +533,155 @@
   animation: zoomOut 0.2s;
   animation-delay: 0;
   animation-fill-mode: both;
+}
+.tetra.SiO4 .formula {
+  animation: zoomOut 1s;
+  animation-delay: 1s;
+  animation-fill-mode: both;
+}
+.tetra.SiO4.selected .formula {
+  animation: bounceIn 1s;
+  animation-delay: 0;
+  animation-fill-mode: both;
+}
+
+.t.droppable {
+  width: 100px;
+  height: 86.6px;
+  position: relative;
+}
+.t.droppable svg,
+.t.droppable .transformable,
+.t.droppable .animatable,
+.m.droppable .transformable,
+.m.droppable .animatable  {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.t.droppable svg g {
+  transform: scale3d(1.167, 1.167, 1.167);
+  transform-origin: center center;
+}
+.t.droppable .transformable,
+.t.droppable .animatable {
+  transform-origin: 50% 50%;
+}
+
+/* .t.droppable.t1 .transformable {
+  top: -180%;
+}
+.t.droppable.t2 .transformable,
+.t.droppable.t3 .transformable {
+  top: -80%;
+}
+.t.droppable.t2 .transformable,
+.t.droppable.t4 .transformable {
+  left: -90%;
+}
+.t.droppable.t3 .transformable,
+.t.droppable.t5 .transformable {
+  left: auto;
+  right: -90%;
+}
+.t.droppable.t6 .transformable {
+  top: auto;
+  bottom: -100%;
+} */
+.t2 .transformable,
+.t3 .transformable,
+.t6 .transformable {
+  transform: rotate3d(0, 0, 1, 180deg);
+}
+
+.m.droppable {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+.m.droppable .atom,
+.m.droppable .nucleus {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  line-height: 50px;
+  margin: 0;
+}
+
+/* .m.droppable.m1 .transformable,
+.m.droppable.m2 .transformable {
+  top: -300%;
+}
+.m.droppable.m1 .transformable,
+.m.droppable.m5 .transformable {
+  left: -140%;
+}
+.m.droppable.m2 .transformable {
+  left: auto;
+  right: -140%;
+}
+.m.droppable.m3 .transformable,
+.m.droppable.m4 .transformable {
+  top: -67%;
+}
+.m.droppable.m3 .transformable {
+  left: -267%;
+}
+.m.droppable.m4 .transformable {
+  left: auto;
+  right: -267%;
+}
+.m.droppable.m5 .transformable {
+  top: auto;
+  bottom: -160%;
+} */
+
+.t.droppable .bg {
+  fill: #222;
+  stroke: #666;
+  stroke-dasharray: 5;
+  stroke-width: 1;
+}
+div[data-highlight="SiO4"] .t.droppable .bg {
+  stroke: #fff;
+}
+.t.droppable .bottom,
+.t.droppable .right {
+  display: none;
+}
+.t.droppable.dropped .bg {
+  fill: #a98448;
+  stroke: none;
+  stroke-width: 0;
+}
+.t.droppable.dropped .bottom,
+.t.droppable.dropped .right {
+  display: block;
+}
+.m.droppable .nucleus {
+  background: #222;
+  border: 1px dashed #666;
+  color: #222;
+}
+div[data-highlight="Al"] .m.droppable.m1 .nucleus,
+div[data-highlight="Al"] .m.droppable.m2 .nucleus,
+div[data-highlight="Be"] .m.droppable.m3 .nucleus,
+div[data-highlight="Be"] .m.droppable.m4 .nucleus,
+div[data-highlight="Be"] .m.droppable.m5 .nucleus {
+  border-color: #fff;
+}
+.m.droppable.dropped .nucleus {
+  background: var(--color-metal);
+  color: #fff;
+  border: none;
+}
+.t.droppable.dropped .animatable,
+.m.droppable.dropped .animatable {
+  animation: bounceIn 2s ease-in-out;
 }
 
 @keyframes bounceIn {
