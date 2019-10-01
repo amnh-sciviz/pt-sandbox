@@ -106,6 +106,7 @@ var MakeBreakApp = (function() {
       app.loadGame();
       app.loadSounds();
       app.loadUI();
+      // setTimeout(function(){ app.onSuccess(); }, 2000);
     });
 
 
@@ -365,7 +366,16 @@ var MakeBreakApp = (function() {
   };
 
   MakeBreakApp.prototype.onSuccess = function(){
-    alert("Success!");
+    var _this = this;
+    $('.canvas div').css("display", "none");
+    $('.status').css("display", "none");
+    $('.success').addClass('active');
+    this.sounds["buildSound"].playSprite("default");
+    setTimeout(function(){
+      $('.success').removeClass('active');
+      $('.success-mineral').addClass('active');
+      _this.sounds["successSound"].playSprite("default");
+    }, 2000);
   };
 
   MakeBreakApp.prototype.parseObjects = function(propList){

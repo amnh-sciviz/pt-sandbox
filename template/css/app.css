@@ -684,6 +684,79 @@ div[data-highlight="Be"] .m.droppable.m5 .nucleus {
   animation: bounceIn 2s ease-in-out;
 }
 
+.success,
+.success-mineral {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  margin-left: -162px;
+  width: 324px;
+  height: 311px;
+  transform-origin: 50% 50%;
+  display: none;
+}
+.success.active,
+.success-mineral.active {
+  display: block;
+}
+.success.active {
+  animation: shrink 0.5s ease-out;
+  animation-fill-mode: both;
+}
+.success-mineral.active {
+  animation: bounceIn 1s ease-in-out;
+}
+.success .b {
+  position: absolute;
+  width: 324px;
+  height: 311px;
+  top: 0;
+  left: 0;
+}
+.success .b2 {
+  left: -100%;
+}
+.success .b3 {
+  left: auto;
+  right: -100%;
+}
+.success .b4,
+.success .b5 {
+  top: -100%;
+}
+.success .b6,
+.success .b7 {
+  top: auto;
+  bottom: -100%;
+}
+.success .b4,
+.success .b6 {
+  left: -50%;
+}
+.success .b5,
+.success .b7 {
+  left: auto;
+  right: -50%;
+}
+.success .bb {
+  animation: bounceIn 1s ease-in-out;
+  animation-fill-mode: both;
+  animation-delay: 0.1s;
+}
+.success .bb.b3 { animation-delay: 0.2s; }
+.success .bb.b4 { animation-delay: 0.25s; }
+.success .bb.b5 { animation-delay: 0.3s; }
+.success .bb.b6 { animation-delay: 0.35s; }
+.success .bb.b7 { animation-delay: 0.4s; }
+
+.success-mineral {
+  color: white;
+  text-align: center;
+}
+.success-mineral h2 {
+  font-size: 2.4rem;
+}
+
 @keyframes bounceIn {
   from,
   20%,
@@ -817,6 +890,15 @@ div[data-highlight="Be"] .m.droppable.m5 .nucleus {
   }
   50% {
     transform: translate3d(50%, 0, 0);
+  }
+}
+@keyframes shrink {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+
+  to {
+    transform: scale3d(0.4, 0.4, 0.4);
   }
 }
 @keyframes spin {
