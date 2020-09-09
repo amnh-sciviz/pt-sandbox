@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Periodic Table Sandbox - Periodic Table Interactive</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../shared/css/vendor/normalize.css">
+  <link rel="stylesheet" href="../shared/css/base.css">
+  <link rel="stylesheet" href="../table/css/app.css">
+  <link rel="stylesheet" href="css/app.css">
+
+</head>
+
+<body>
+
+  <div class="message">
+    <h1>The periodic table represents the discovery of the elements over time and their attributes</h1>
+  </div>
+
+  <div id="canvas" class="canvas"></div>
+
+  <div class="legend">
+    <div id="year" class="year"></div>
+    <div class="count"><span id="count"></span> elements discovered</div>
+  </div>
+
+  <div class="timeline">
+    <div class="era" data-start="1600" data-end="1700" style="background-color: #460e5a">
+      <div class="title">Antiquity to Middle Ages</div>
+      <div class="description">Unrecorded discoveries up into the Middle Ages</div>
+    </div>
+
+    <div class="era" data-start="1700" data-end="1799" style="background-color: #2a285b">
+      <div class="title">Middle Ages–​1799</div>
+      <div class="description">Age of enlightenment</div>
+    </div>
+
+    <div class="era" data-start="1800" data-end="1849" style="background-color: #1c4058">
+      <div class="title">1800–​1849</div>
+      <div class="description">Scientific and industrial revolutions</div>
+    </div>
+
+    <div class="era" data-start="1850" data-end="1899" style="background-color: #18645a">
+      <div class="title">1850–​1899</div>
+      <div class="description">The age of classifying elements</div>
+    </div>
+
+    <div class="era" data-start="1900" data-end="1949" style="background-color: #1d613d">
+      <div class="title">1900–​1949</div>
+      <div class="description">Development of quantum theory</div>
+    </div>
+
+    <div class="era" data-start="1950" data-end="2020" style="background-color: #546c19">
+      <div class="title">1950–​present</div>
+      <div class="description">Development of synthetic elements</div>
+    </div>
+  </div>
+
+  <div class="slider">
+    <input id="year-slider" type="range" min="1600" max="2020" step="1" value="1600" />
+  </div>
+
+  <script src="../shared/js/vendor/jquery-3.4.1.min.js"></script>
+  <script src="../shared/js/vendor/underscore-min.js"></script>
+  <script src="../shared/js/vendor/papaparse.min.js"></script>
+  <script src="../table/js/pt.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

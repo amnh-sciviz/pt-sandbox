@@ -1,0 +1,93 @@
+body {
+  background: black;
+  color: white;
+}
+
+.canvas {
+  background: none;
+  position: relative;
+  top: auto;
+  left: auto;
+  width: auto;
+  height: auto;
+}
+
+.message {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: -60px;
+}
+.message h1 {
+  font-size: 1.8rem;
+}
+
+.table {
+  position: relative;
+  width: 90vw;
+  height: 67.5vw; /* aspect ratio: 1.33333 */
+  top: auto;
+  left: auto;
+  margin: 0 auto;
+}
+/* wide screens */
+@media only screen and (min-aspect-ratio: 4/3) {
+  .table {
+    width: 106.6666666667vh;
+    height: 80vh; /* aspect ratio: 1.33333 */
+    top: auto;
+    left: auto;
+    margin: 0 auto;
+  }
+}
+
+.legend {
+  margin-top: -40px;
+  margin-left: 10px;
+  line-height: 1;
+}
+.legend .year {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+.legend .count {
+  font-size: 1.6rem;
+}
+
+.timeline {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.timeline .era {
+  padding: 10px;
+  box-sizing: border-box;
+}
+.title {
+  font-size: 1rem;
+  font-weight: bold;
+}
+.description {
+  font-size: 0.8rem;
+}
+
+.slider {
+  width: 100%;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.slider input {
+  width: 100%;
+}
+
+.element > a {
+  opacity: 0.5;
+  transition: background-color 0.2s ease-in-out;
+}
+.element.discovered > a  {
+  opacity: 0.75;
+}
+.element.discovered.active > a  {
+  opacity: 1;
+}
