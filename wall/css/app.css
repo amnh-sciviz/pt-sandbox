@@ -9,11 +9,6 @@ h1 {
   margin-top: 2.2vmin;
   font-size: 3.2vmin;
 }
-
-.wall {
-
-}
-
 .screen-wrapper {
   top: 0;
   position: absolute;
@@ -143,11 +138,11 @@ h1 {
   flex-grow: 1;
 }
 .mineral-text .name {
-  font-size: 1.667vmin;
+  font-size: 1.5vmin;
   white-space: nowrap;
 }
 .mineral-text .formula {
-  font-size: 1.667vmin;
+  font-size: 1.5vmin;
   display: none;
   white-space: nowrap;
   -webkit-animation: fadeInUp 0.5s ease-in-out;
@@ -157,6 +152,63 @@ h1 {
   display: inline-block;
   margin: 0 -0.2vmin;
   vertical-align: middle;
+}
+
+.wall[data-layout="v2"] .pt,
+.wall[data-layout="v3"] .pt {
+  position: absolute;
+  top: 0;
+  width: 90%;
+  left: 50%;
+  margin-left: -45%;
+}
+.wall[data-layout="v2"] .pt .gradient,
+.wall[data-layout="v3"] .pt .gradient {
+  height: 25%;
+}
+.wall[data-layout="v2"] .supplementary {
+  bottom: auto;
+  top: 66.6666666667%;
+}
+.wall[data-layout="v2"] .formulas {
+  background: rgba(1,167,181,0.196516106442577);
+  background: linear-gradient(180deg, rgba(1,167,181,0.196516106442577) 0%, rgba(0,0,0,0) 100%);
+  position: relative;
+  padding-top: 0;
+}
+.wall[data-layout="v2"] .formulas h2 {
+  margin: 0;
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  top: -40px;
+  left: 0;
+}
+
+.wall[data-layout="v3"] .formulas h2 {
+  display: none;
+}
+.wall[data-layout="v3"] .supplementary {
+  bottom: auto;
+  top: 70%;
+  justify-content: space-between;
+}
+.wall[data-layout="v3"] .formulas {
+  width: auto;
+  background: linear-gradient(90deg, rgba(1,167,181,0) 0%, rgba(1,167,181,0.196516106442577) 100%);
+}
+.wall[data-layout="v3"] .formulas:first-child {
+  background: linear-gradient(90deg, rgba(1,167,181,0.196516106442577) 0%, rgba(1,167,181,0) 100%);
+}
+.wall[data-layout="v3"] .minerals {
+  flex-direction: column;
+}
+.wall[data-layout="v3"] .mineral {
+  width: auto;
+}
+.wall[data-layout="v3"] .formulas:last-child .mineral {
+  flex-direction: row-reverse;
 }
 
 .mineral:hover .mineral-text .name {
@@ -199,6 +251,26 @@ h1 {
 }
 .fe {
   color: #497b36;
+}
+
+
+.menu {
+  border: 2px solid red;
+  width: auto;
+  display: inline-block;
+}
+a.menu-link {
+  color: #ccc;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  font-size: 1.4rem;
+  display: block;
+  text-decoration: none;
+
+}
+a.menu-link.active {
+  text-decoration: underline;
+  color: white;
 }
 
 @keyframes fadeInUp {
