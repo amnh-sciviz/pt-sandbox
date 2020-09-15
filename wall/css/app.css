@@ -197,9 +197,13 @@ h1 {
 .wall[data-layout="v3"] .formulas {
   width: auto;
   background: linear-gradient(90deg, rgba(1,167,181,0) 0%, rgba(1,167,181,0.196516106442577) 100%);
+  border: 1px solid #999;
+  padding-left: 1rem;
 }
 .wall[data-layout="v3"] .formulas:first-child {
   background: linear-gradient(90deg, rgba(1,167,181,0.196516106442577) 0%, rgba(1,167,181,0) 100%);
+  padding-left: 0;
+  padding-right: 1rem;
 }
 .wall[data-layout="v3"] .minerals {
   flex-direction: column;
