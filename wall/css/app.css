@@ -35,10 +35,13 @@ h1 {
 
 .pt {
   position: absolute;
-  top: 7.5%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* top: 7.5%;
   width: 70%;
   left: 50%;
-  margin-left: -35%;
+  margin-left: -35%; */
 }
 .pt img {
   width: 100%;
@@ -154,7 +157,7 @@ h1 {
   vertical-align: middle;
 }
 
-.wall[data-layout="v2"] .pt,
+/* .wall[data-layout="v2"] .pt,
 .wall[data-layout="v3"] .pt {
   position: absolute;
   top: 0;
@@ -165,7 +168,7 @@ h1 {
 .wall[data-layout="v2"] .pt .gradient,
 .wall[data-layout="v3"] .pt .gradient {
   height: 20%;
-}
+} */
 .wall[data-layout="v2"] .supplementary {
   bottom: auto;
   top: 66.6666666667%;
